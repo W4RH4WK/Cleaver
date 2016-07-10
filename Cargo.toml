@@ -1,0 +1,7 @@
+[package]
+name = "cleaver"
+version = "0.1.0"
+authors = ["Alex Hirsch <w4rh4wk@bluephoenix.at>"]
+repository = "https://github.com/W4RH4WK/Cleaver"
+readme = "README.md"
+license = "MIT License"
