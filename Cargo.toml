@@ -5,3 +5,8 @@ authors = ["Alex Hirsch <w4rh4wk@bluephoenix.at>"]
 repository = "https://github.com/W4RH4WK/Cleaver"
 readme = "README.md"
 license = "MIT License"
+
+[[bin]]
+name = "cleaver"
+path = "src/bin/driver.rs"
+doc = false
