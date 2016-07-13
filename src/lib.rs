@@ -1,3 +1,7 @@
+#![allow(dead_code)]
+
+pub mod front;
+
 pub fn my_name() -> &'static str {
     "Cleaver"
 }
