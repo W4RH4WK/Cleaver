@@ -25,8 +25,12 @@ pub enum TokenType {
     RBrace,
 
     KwVoid,
+    KwBool,
     KwInt,
     KwFloat,
+
+    KwTrue,
+    KwFalse,
 
     KwIf,
     KwElse,
@@ -66,8 +70,13 @@ impl<I: Iterator<Item = char>> Lexer<I> {
         match ident.as_ref() {
             // handle type keywords
             "void" => TokenType::KwVoid,
+            "bool" => TokenType::KwBool,
             "int" => TokenType::KwInt,
             "float" => TokenType::KwFloat,
+
+            // handle bool literals
+            "true" => TokenType::KwTrue,
+            "false" => TokenType::KwFalse,
 
             // handle keywords
             "if" => TokenType::KwIf,
@@ -125,14 +134,14 @@ impl<I: Iterator<Item = char>> Iterator for Lexer<I> {
                 '{' => TokenType::LBrace,
                 '}' => TokenType::RBrace,
 
-                // handle OPs (simple)
+                // handle Ops (simple)
                 '!' => TokenType::NOT,
                 '+' => TokenType::PLUS,
                 '-' => TokenType::MINUS,
                 '*' => TokenType::ASTER,
                 '/' => TokenType::SLASH,
 
-                // handle OPs (complex)
+                // handle Ops (complex)
                 '=' => {
                     if let Some(&'=') = self.input.peek() {
                         self.input.next();
@@ -194,10 +203,13 @@ mod test {
 
     #[test]
     fn keywords() {
-        let mut l = Lexer::new("void int float if else while return".chars());
+        let mut l = Lexer::new("void bool int float true false if else while return".chars());
         assert_eq!(l.next(), Some(TokenType::KwVoid));
+        assert_eq!(l.next(), Some(TokenType::KwBool));
         assert_eq!(l.next(), Some(TokenType::KwInt));
         assert_eq!(l.next(), Some(TokenType::KwFloat));
+        assert_eq!(l.next(), Some(TokenType::KwTrue));
+        assert_eq!(l.next(), Some(TokenType::KwFalse));
         assert_eq!(l.next(), Some(TokenType::KwIf));
         assert_eq!(l.next(), Some(TokenType::KwElse));
         assert_eq!(l.next(), Some(TokenType::KwWhile));
