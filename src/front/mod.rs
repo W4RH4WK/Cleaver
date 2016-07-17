@@ -1,1 +1,1 @@
-pub mod manual;
+pub mod manual_parser;
