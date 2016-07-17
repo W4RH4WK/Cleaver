@@ -1,15 +1,11 @@
 use std::rc::Rc;
 
-#[derive(PartialEq, Debug)]
-pub struct Position {
-    line: i32,
-    col: i32,
-}
+use super::Position;
 
 #[derive(PartialEq, Debug)]
 pub struct Node<I> {
     pos: Position,
-    node: I
+    node: I,
 }
 
 #[derive(PartialEq, Debug)]
@@ -58,7 +54,7 @@ pub enum BinaryOp {
 
     EQ,
     LT,
-    LE
+    LE,
 }
 
 #[derive(PartialEq, Debug)]
@@ -81,7 +77,7 @@ pub enum Statement {
     },
     Compound {
         stmts: Box<Vec<Node<Statement>>>,
-    }
+    },
 }
 
 #[derive(PartialEq, Debug)]
