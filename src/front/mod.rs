@@ -2,7 +2,7 @@ use std::fmt;
 use std::rc::Rc;
 
 pub mod ast;
-pub mod manual_parser;
+pub mod rd_parser;
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Position {
