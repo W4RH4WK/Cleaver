@@ -1,5 +1,4 @@
 use std::iter::Peekable;
-use std::rc::Rc;
 
 use front::Position;
 
@@ -61,13 +60,9 @@ pub struct Lexer<I: Iterator<Item = char>> {
 
 impl<I: Iterator<Item = char>> Lexer<I> {
     fn new(input: I) -> Lexer<I> {
-        Lexer::new_named("stdin", input)
-    }
-
-    fn new_named(file: &str, input: I) -> Lexer<I> {
         Lexer {
             input: input.peekable(),
-            pos: Position::new(Rc::new(file.to_string())),
+            pos: Position::default(),
         }
     }
 
