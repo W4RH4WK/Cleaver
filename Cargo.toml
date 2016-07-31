@@ -6,6 +6,9 @@ repository = "https://github.com/W4RH4WK/Cleaver"
 readme = "README.md"
 license = "MIT License"
 
+[dependencies]
+pest = "0.3.2"
+
 [[bin]]
 name = "cleaver"
 path = "src/bin/driver.rs"
