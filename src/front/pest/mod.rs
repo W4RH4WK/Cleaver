@@ -130,7 +130,7 @@ impl_rdp! {
         }
 
         parse_variable(&self) -> ast::Variable {
-            (_: variable, &ident: identifier) => ast::Variable::new(ident.to_owned())
+            (_: variable, &ident: identifier) => ast::Variable::stub(ident.to_owned())
         }
 
         parse_literal(&self) -> ast::Literal {
@@ -392,11 +392,11 @@ mod test {
     fn variables() {
         let mut parser = Rdp::new(StringInput::new("foo b4r ba_"));
         assert!(parser.variable());
-        assert!(ast::Variable::new("foo".to_owned()).eq_name_type(&parser.parse_variable()));
+        assert!(ast::Variable::stub("foo".to_owned()).eq_name_type(&parser.parse_variable()));
         assert!(parser.variable());
-        assert!(ast::Variable::new("b4r".to_owned()).eq_name_type(&parser.parse_variable()));
+        assert!(ast::Variable::stub("b4r".to_owned()).eq_name_type(&parser.parse_variable()));
         assert!(parser.variable());
-        assert!(ast::Variable::new("ba_".to_owned()).eq_name_type(&parser.parse_variable()));
+        assert!(ast::Variable::stub("ba_".to_owned()).eq_name_type(&parser.parse_variable()));
         assert!(parser.end());
     }
 

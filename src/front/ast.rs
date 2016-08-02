@@ -47,7 +47,7 @@ pub struct Variable {
 }
 
 impl Variable {
-    pub fn new(name: String) -> Variable {
+    pub fn stub(name: String) -> Variable {
         Variable {
             id: 0,
             type_: Type::Void,
