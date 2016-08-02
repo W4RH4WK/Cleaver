@@ -106,7 +106,7 @@ impl_rdp! {
 
 // ------------------------------------------------------------ Program
 
-        program = { wrap_fun* }
+        program = _{ wrap_fun* }
 
         function = { type_ ~ identifier ~ ["("] ~ (decl_list)? ~ [")"] ~ statement }
 
@@ -357,8 +357,8 @@ impl_rdp! {
             }
         }
 
-        parse_functions(&self) -> HashMap<String, ast::Node<ast::Function>> {
-            (_: wrap_fun, fun: parse_function(), mut tail: parse_functions()) => {
+        parse_program(&self) -> HashMap<String, ast::Node<ast::Function>> {
+            (_: wrap_fun, fun: parse_function(), mut tail: parse_program()) => {
                 tail.insert(fun.node.name.clone(), fun);
                 tail
             },
@@ -384,9 +384,9 @@ impl_rdp! {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pest::prelude::*;
-    use ::front::ast;
+    pub use super::*;
+    pub use pest::prelude::*;
+    pub use ::front::ast;
 
     #[test]
     fn variables() {
@@ -460,75 +460,307 @@ mod test {
     }
 
     #[test]
-    fn expressions() {
-        let mut parser = Rdp::new(StringInput::new("2 foo foo(2) (-2) (2 + 3)"));
+    fn function() {
+        let mut parser = Rdp::new(StringInput::new("int foo(int bar, float baz) return bar;"));
+        parser.function();
 
-        assert!(parser.expression());
-        assert_eq!(ast::Expression::Literal { lit: ast::Literal::Int(2) },
-                   parser.parse_expression().node);
+        let ast::Function { name, filename: _, body, args, ret_type, symbols: _ } =
+            parser.parse_function().node;
 
+        assert_eq!("foo", name);
+        assert_eq!(ast::Type::Int, ret_type);
 
-        assert!(parser.expression());
-        match parser.parse_expression().node {
-            ast::Expression::Variable { var } => assert_eq!("foo", var.name),
-            _ => assert!(false),
-        }
+        // check arguments
+        assert_eq!(2, args.len());
+        let arg0 = ast::Variable {
+            id: 0,
+            name: "bar".to_owned(),
+            type_: ast::Type::Int,
+        };
+        assert!(arg0.eq_name_type(&args[0]));
+        let arg1 = ast::Variable {
+            id: 0,
+            name: "baz".to_owned(),
+            type_: ast::Type::Float,
+        };
+        assert!(arg1.eq_name_type(&args[1]));
 
-        assert!(parser.expression());
-        match parser.parse_expression().node {
-            ast::Expression::Call { function, args } => {
-                assert_eq!("foo", function);
-                assert_eq!(1, args.len());
-                assert_eq!(ast::Expression::Literal { lit: ast::Literal::Int(2) },
-                           args[0].node)
+        // check body
+        match body.node {
+            ast::Statement::Return { ref expr } => {
+                match expr.as_ref().unwrap().node {
+                    ast::Expression::Variable { ref var } => assert_eq!("bar", var.name),
+                    _ => assert!(false),
+                }
             }
             _ => assert!(false),
-        }
+        };
 
-        assert!(parser.expression());
-        match parser.parse_expression().node {
-            ast::Expression::Parenthesis { expr } => {
-                match expr.node {
-                    ast::Expression::Unary { ref op, ref expr } => {
-                        assert_eq!(&ast::UnaryOp::MINUS, op);
-                        match expr.node {
-                            ast::Expression::Literal { ref lit } => {
-                                assert_eq!(&ast::Literal::Int(2), lit)
+        parser.end();
+    }
+
+    #[test]
+    fn program() {
+        let fs = &vec![
+            "int foo(int bar, float baz) { return bar; }",
+            "bool boo(string taf, int taz) { 2 + 3; return taz; }",
+        ]
+            .join("");
+
+        let mut parser = Rdp::new(StringInput::new(fs));
+        parser.program();
+        assert_eq!(2, parser.parse_program().len());
+        parser.end();
+    }
+
+    mod expression {
+        use super::*;
+
+        #[test]
+        fn expressions() {
+            let mut parser = Rdp::new(StringInput::new("2 foo foo(2) (-2) (2 + 3)"));
+
+            assert!(parser.expression());
+            assert_eq!(ast::Expression::Literal { lit: ast::Literal::Int(2) },
+                       parser.parse_expression().node);
+
+
+            assert!(parser.expression());
+            match parser.parse_expression().node {
+                ast::Expression::Variable { var } => assert_eq!("foo", var.name),
+                _ => assert!(false),
+            }
+
+            assert!(parser.expression());
+            match parser.parse_expression().node {
+                ast::Expression::Call { function, args } => {
+                    assert_eq!("foo", function);
+                    assert_eq!(1, args.len());
+                    assert_eq!(ast::Expression::Literal { lit: ast::Literal::Int(2) },
+                               args[0].node)
+                }
+                _ => assert!(false),
+            }
+
+            assert!(parser.expression());
+            match parser.parse_expression().node {
+                ast::Expression::Parenthesis { expr } => {
+                    match expr.node {
+                        ast::Expression::Unary { ref op, ref expr } => {
+                            assert_eq!(&ast::UnaryOp::MINUS, op);
+                            match expr.node {
+                                ast::Expression::Literal { ref lit } => {
+                                    assert_eq!(&ast::Literal::Int(2), lit)
+                                }
+                                _ => assert!(false),
                             }
-                            _ => assert!(false),
                         }
+                        _ => assert!(false),
                     }
-                    _ => assert!(false),
                 }
+                _ => assert!(false),
             }
-            _ => assert!(false),
+
+            assert!(parser.expression());
+            match parser.parse_expression().node {
+                ast::Expression::Parenthesis { expr } => {
+                    match expr.node {
+                        ast::Expression::Binary { ref op, ref left, ref right } => {
+                            assert_eq!(&ast::BinaryOp::ADD, op);
+                            match left.node {
+                                ast::Expression::Literal { ref lit } => {
+                                    assert_eq!(&ast::Literal::Int(2), lit)
+                                }
+                                _ => assert!(false),
+                            };
+                            match right.node {
+                                ast::Expression::Literal { ref lit } => {
+                                    assert_eq!(&ast::Literal::Int(3), lit)
+                                }
+                                _ => assert!(false),
+                            };
+                        }
+                        _ => assert!(false),
+                    }
+                }
+                _ => assert!(false),
+            }
+
+            assert!(parser.end());
+        }
+    }
+
+    mod statement {
+        use super::*;
+
+        #[test]
+        fn statements() {
+            let mut parser = Rdp::new(StringInput::new("2; int foo; foo = 2; {2;}"));
+            let l = ast::Literal::Int(2);
+            let v = ast::Variable {
+                id: 0,
+                type_: ast::Type::Int,
+                name: "foo".to_owned(),
+            };
+
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::Expression { ref expr } => {
+                    match expr.node {
+                        ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                        _ => assert!(false),
+                    }
+                }
+                _ => assert!(false),
+            }
+
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::Declaration { ref var } => assert!(v.eq_name_type(var)),
+                _ => assert!(false),
+            }
+
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::Assignment { ref var, ref expr } => {
+                    assert_eq!("foo", var.name);
+                    match expr.node {
+                        ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                        _ => assert!(false),
+                    }
+                }
+                _ => assert!(false),
+            }
+
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::Compound { stmts, symbols: _ } => {
+                    assert_eq!(1, stmts.len());
+                    match stmts[0].node {
+                        ast::Statement::Expression { ref expr } => {
+                            match expr.node {
+                                ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                                _ => assert!(false),
+                            }
+                        }
+                        _ => assert!(false),
+                    }
+                }
+                _ => assert!(false),
+            }
+
+            parser.end();
         }
 
-        assert!(parser.expression());
-        match parser.parse_expression().node {
-            ast::Expression::Parenthesis { expr } => {
-                match expr.node {
-                    ast::Expression::Binary { ref op, ref left, ref right } => {
-                        assert_eq!(&ast::BinaryOp::ADD, op);
-                        match left.node {
-                            ast::Expression::Literal { ref lit } => {
-                                assert_eq!(&ast::Literal::Int(2), lit)
+        #[test]
+        fn if_statement() {
+            let l = ast::Literal::Int(2);
+
+            let mut parser = Rdp::new(StringInput::new("if (2) 2;"));
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::If { ref cond, ref on_true, ref on_false } => {
+                    match cond.node {
+                        ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                        _ => assert!(false),
+                    };
+                    match on_true.node {
+                        ast::Statement::Expression { ref expr } => {
+                            match expr.node {
+                                ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                                _ => assert!(false),
                             }
-                            _ => assert!(false),
-                        };
-                        match right.node {
-                            ast::Expression::Literal { ref lit } => {
-                                assert_eq!(&ast::Literal::Int(3), lit)
-                            }
-                            _ => assert!(false),
-                        };
-                    }
-                    _ => assert!(false),
+                        }
+                        _ => assert!(false),
+                    };
+                    assert!(on_false.is_none());
                 }
-            }
-            _ => assert!(false),
+                _ => assert!(false),
+            };
+            parser.end();
+
+            let mut parser = Rdp::new(StringInput::new("if (2) 2; else 2;"));
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::If { ref cond, ref on_true, ref on_false } => {
+                    match cond.node {
+                        ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                        _ => assert!(false),
+                    };
+                    match on_true.node {
+                        ast::Statement::Expression { ref expr } => {
+                            match expr.node {
+                                ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                                _ => assert!(false),
+                            }
+                        }
+                        _ => assert!(false),
+                    };
+                    match on_false.as_ref().unwrap().node {
+                        ast::Statement::Expression { ref expr } => {
+                            match expr.node {
+                                ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                                _ => assert!(false),
+                            }
+                        }
+                        _ => assert!(false),
+                    };
+                }
+                _ => assert!(false),
+            };
+            parser.end();
         }
 
-        assert!(parser.end());
+        #[test]
+        fn while_statement() {
+            let l = ast::Literal::Int(2);
+
+            let mut parser = Rdp::new(StringInput::new("while (2) 2;"));
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::While { ref cond, ref body } => {
+                    match cond.node {
+                        ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                        _ => assert!(false),
+                    };
+                    match body.node {
+                        ast::Statement::Expression { ref expr } => {
+                            match expr.node {
+                                ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                                _ => assert!(false),
+                            }
+                        }
+                        _ => assert!(false),
+                    };
+                }
+                _ => assert!(false),
+            };
+            parser.end();
+        }
+
+        #[test]
+        fn return_statement() {
+            let l = ast::Literal::Int(2);
+
+            let mut parser = Rdp::new(StringInput::new("return; return 2;"));
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::Return { ref expr } => assert!(expr.is_none()),
+                _ => assert!(false),
+            };
+
+            parser.statement();
+            match parser.parse_statement().node {
+                ast::Statement::Return { ref expr } => {
+                    match expr.as_ref().unwrap().node {
+                        ast::Expression::Literal { ref lit } => assert_eq!(&l, lit),
+                        _ => assert!(false),
+                    }
+                }
+                _ => assert!(false),
+            };
+
+            parser.end();
+        }
     }
 }
