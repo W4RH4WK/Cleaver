@@ -13,8 +13,8 @@ use std::rc::Rc;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Position {
-    line: usize,
-    col: usize,
+    pub line: usize,
+    pub col: usize,
 }
 
 impl Position {
@@ -31,7 +31,9 @@ impl Default for Position {
 
 impl From<(usize, usize)> for Position {
     fn from((line, col): (usize, usize)) -> Position {
-        Position { line: line, col: col }
+        Position {
+            line: line,
+            col: col,
     }
 }
 
