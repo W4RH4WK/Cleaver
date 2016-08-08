@@ -6,7 +6,7 @@ use std::rc::Rc;
 use pest::prelude::*;
 
 use ::front::Position;
-use ::front::SymbolTable;
+use ::front::symbols::SymbolTable;
 use ::front::ast;
 
 impl_rdp! {
@@ -330,7 +330,7 @@ impl_rdp! {
                     pos: Position::from(self.input().line_col(pos.start)),
                     node: ast::Statement::Compound {
                         stmts: stmts.into_iter().collect(),
-                        symbols: Rc::new(RefCell::new(SymbolTable::new(None))),
+                        symbols: Rc::new(RefCell::new(SymbolTable::default())),
                     }
                 }
             },
@@ -359,7 +359,7 @@ impl_rdp! {
                         body: body,
                         args: args.into_iter().collect(),
                         ret_type: ret_type,
-                        symbols: Rc::new(RefCell::new(SymbolTable::new(None))),
+                        symbols: Rc::new(RefCell::new(SymbolTable::default())),
                     }
                 }
             }

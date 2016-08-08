@@ -6,10 +6,7 @@
 
 pub mod ast;
 pub mod pest;
-
-use std::cell::RefCell;
-use std::collections::HashMap;
-use std::rc::Rc;
+pub mod symbols;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Position {
@@ -34,30 +31,6 @@ impl From<(usize, usize)> for Position {
         Position {
             line: line,
             col: col,
-    }
-}
-
-#[derive(PartialEq, Debug)]
-pub struct SymbolTable {
-    parent: Option<Rc<RefCell<SymbolTable>>>,
-    vars: HashMap<String, Rc<ast::Variable>>,
-}
-
-impl SymbolTable {
-    fn new(parent: Option<Rc<RefCell<SymbolTable>>>) -> SymbolTable {
-        SymbolTable {
-            parent: parent,
-            vars: HashMap::new(),
-        }
-    }
-
-    fn lookup(&self, var: &String) -> Option<Rc<ast::Variable>> {
-        if let Some(v) = self.vars.get(var) {
-            return Some(v.clone());
-        }
-        match self.parent {
-            Some(ref p) => p.borrow().lookup(var),
-            None => None,
         }
     }
 }

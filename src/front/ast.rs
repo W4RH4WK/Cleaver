@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use super::Position;
-use super::SymbolTable;
+use super::symbols::SymbolTable;
 
 #[derive(PartialEq, Debug)]
 pub struct Node<I> {
@@ -11,7 +11,7 @@ pub struct Node<I> {
     pub node: I,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone, Copy)]
 pub enum Type {
     Void,
     Bool,
