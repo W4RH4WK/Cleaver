@@ -26,7 +26,13 @@ impl SymbolTable {
         }
     }
 
-    pub fn insert(&mut self, var: &mut Rc<ast::Variable>) -> Rc<ast::Variable> {
+    pub fn insert(&mut self, var: &mut Rc<ast::Variable>) -> Result<Rc<ast::Variable>, String> {
+        // check for duplicate
+        if self.vars.contains_key(&var.name) {
+            return Err(format!("`{}` already declared", var.name));
+        }
+
+        // insert new one
         let new = Rc::new(ast::Variable {
             id: self.id_counter,
             type_: var.type_,
@@ -34,78 +40,90 @@ impl SymbolTable {
         });
         self.id_counter += 1;
         self.vars.insert(var.name.clone(), new.clone());
-        new
+
+        // return reference to final variable
+        Ok(new)
     }
 
-    pub fn lookup(&self, var: &String) -> Option<Rc<ast::Variable>> {
+    pub fn lookup(&self, var: &String) -> Result<Rc<ast::Variable>, String> {
         if let Some(v) = self.vars.get(var) {
-            return Some(v.clone());
+            return Ok(v.clone());
         }
+
+        // check previous scope
         match self.parent {
             Some(ref p) => p.borrow().lookup(var),
-            None => None,
+            None => Err(format!("`{}` unknown variable", var)),
         }
     }
 }
 
-pub fn symbolize(fun: &mut ast::Node<ast::Function>) {
+pub fn symbolize(fun: &mut ast::Node<ast::Function>) -> Result<(), String> {
     // arguments
     for arg in fun.node.args.iter_mut() {
-        *arg = fun.node.symbols.borrow_mut().insert(arg);
+        *arg = try!(fun.node.symbols.borrow_mut().insert(arg));
     }
 
-    symbolize_statement(fun.node.symbols.clone(), &mut fun.node.body);
+    symbolize_statement(fun.node.symbols.clone(), &mut fun.node.body)
 }
 
-fn symbolize_statement(symbols: Rc<RefCell<SymbolTable>>, stmt: &mut ast::Node<ast::Statement>) {
+fn symbolize_statement(symbols: Rc<RefCell<SymbolTable>>, stmt: &mut ast::Node<ast::Statement>) -> Result<(), String> {
     match stmt.node {
         ast::Statement::Expression { ref mut expr } => symbolize_expression(symbols, expr),
-        ast::Statement::Declaration { ref mut var } => *var = symbols.borrow_mut().insert(var),
+        ast::Statement::Declaration { ref mut var } => {
+            *var = try!(symbols.borrow_mut().insert(var));
+            Ok(())
+        }
         ast::Statement::Assignment { ref mut var, ref mut expr } => {
-            *var = symbols.borrow().lookup(&var.name).unwrap();
-            symbolize_expression(symbols, expr);
+            *var = try!(symbols.borrow().lookup(&var.name));
+            symbolize_expression(symbols, expr)
         }
         ast::Statement::If { ref mut cond, ref mut on_true, ref mut on_false } => {
-            symbolize_expression(symbols.clone(), cond);
-            symbolize_statement(symbols.clone(), on_true);
+            try!(symbolize_expression(symbols.clone(), cond));
+            try!(symbolize_statement(symbols.clone(), on_true));
             if let Some(ref mut stmt) = *on_false {
-                symbolize_statement(symbols.clone(), stmt);
+                symbolize_statement(symbols.clone(), stmt)
+            } else {
+                Ok(())
             }
         }
         ast::Statement::While { ref mut cond, ref mut body } => {
-            symbolize_expression(symbols.clone(), cond);
-            symbolize_statement(symbols.clone(), body);
+            try!(symbolize_expression(symbols.clone(), cond));
+            symbolize_statement(symbols.clone(), body)
         }
         ast::Statement::Return { expr: Some(ref mut e) } => symbolize_expression(symbols, e),
         ast::Statement::Compound { ref mut stmts, symbols: ref mut next } => {
             *next = Rc::new(RefCell::new(SymbolTable::new(Some(symbols.clone()),
                                                           symbols.borrow().id_counter)));
             for stmt in stmts.iter_mut() {
-                symbolize_statement(next.clone(), stmt);
+                try!(symbolize_statement(next.clone(), stmt));
             }
+            Ok(())
         }
-        _ => (),
+        _ => Ok(()),
     }
 }
 
-fn symbolize_expression(symbols: Rc<RefCell<SymbolTable>>, expr: &mut ast::Node<ast::Expression>) {
+fn symbolize_expression(symbols: Rc<RefCell<SymbolTable>>, expr: &mut ast::Node<ast::Expression>) -> Result<(), String> {
     match expr.node {
         ast::Expression::Variable { ref mut var } => {
-            *var = symbols.borrow().lookup(&var.name).unwrap()
+            *var = try!(symbols.borrow().lookup(&var.name));
+            Ok(())
         }
         ast::Expression::Call { ref mut args, .. } => {
             for arg in args.iter_mut() {
-                symbolize_expression(symbols.clone(), arg);
+                try!(symbolize_expression(symbols.clone(), arg));
             }
+            Ok(())
         }
         ast::Expression::Unary { ref mut expr, .. } => symbolize_expression(symbols.clone(), expr),
         ast::Expression::Binary { ref mut left, ref mut right, .. } => {
-            symbolize_expression(symbols.clone(), left);
-            symbolize_expression(symbols.clone(), right);
+            try!(symbolize_expression(symbols.clone(), left));
+            symbolize_expression(symbols.clone(), right)
         }
         ast::Expression::Parenthesis { ref mut expr } => {
             symbolize_expression(symbols.clone(), expr)
         }
-        _ => (),
+        _ => Ok(()),
     }
 }
