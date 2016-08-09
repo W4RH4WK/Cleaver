@@ -1,4 +1,3 @@
-
 pub mod print_simple {
     use ::front::ast;
 
@@ -53,5 +52,144 @@ pub mod print_simple {
 
     pub fn variable(var: &ast::Variable) -> String {
         format!("{}_{}({:?})", var.id, var.name, var.type_)
+    }
+}
+
+pub mod print_dot {
+    use ::front::ast;
+    use super::print_simple;
+
+    pub fn function(fun: &ast::Node<ast::Function>) -> String {
+        format!("digraph {}_{} {{\n{}}}\n",
+                fun.node.filename,
+                fun.node.name,
+                statement(&fun.node.body))
+    }
+
+    fn statement(stmt: &ast::Node<ast::Statement>) -> String {
+        let mut ret = node(stmt, &print_simple::statement(stmt));
+        match stmt.node {
+            ast::Statement::Expression { ref expr } => {
+                ret.push_str(&expression(expr));
+                ret.push_str(&edge(stmt, expr, "expr"));
+            }
+            ast::Statement::Declaration { ref var } => {
+                ret.push_str(&node_var(var));
+                ret.push_str(&edge_to_var(stmt, var));
+            }
+            ast::Statement::Assignment { ref var, ref expr } => {
+                ret.push_str(&node_var(var));
+                ret.push_str(&edge_to_var(stmt, var));
+                ret.push_str(&expression(expr));
+                ret.push_str(&edge(stmt, expr, "expr"));
+            }
+            ast::Statement::If { ref cond, ref on_true, ref on_false } => {
+                ret.push_str(&expression(cond));
+                ret.push_str(&edge(stmt, cond, "cond"));
+                ret.push_str(&statement(on_true));
+                ret.push_str(&edge(stmt, on_true, "on_true"));
+                if let Some(ref else_part) = *on_false {
+                    ret.push_str(&statement(else_part));
+                    ret.push_str(&edge(stmt, else_part, "on_false"));
+                }
+            }
+            ast::Statement::While { ref cond, ref body } => {
+                ret.push_str(&expression(cond));
+                ret.push_str(&edge(stmt, cond, "cond"));
+                ret.push_str(&statement(body));
+                ret.push_str(&edge(stmt, body, "body"));
+            }
+            ast::Statement::Return { expr: Some(ref expr) } => {
+                ret.push_str(&expression(expr));
+                ret.push_str(&edge(stmt, expr, "expr"));
+            }
+            ast::Statement::Compound { ref stmts, .. } => {
+                for (i, s) in stmts.iter().enumerate() {
+                    ret.push_str(&statement(s));
+                    ret.push_str(&edge(stmt, s, &*i.to_string()));
+                }
+            }
+            _ => (),
+        }
+        ret
+    }
+
+    fn expression(expr: &ast::Node<ast::Expression>) -> String {
+        let mut ret = node(expr, &print_simple::expression(expr));
+        match expr.node {
+            ast::Expression::Call { ref args, .. } => {
+                for (i, arg) in args.iter().enumerate() {
+                    ret.push_str(&expression(arg));
+                    ret.push_str(&edge(expr, arg, &*i.to_string()));
+                }
+            }
+            ast::Expression::Unary { expr: ref e, .. } => {
+                ret.push_str(&expression(e));
+                ret.push_str(&edge(expr, e, "expr"));
+            }
+            ast::Expression::Binary { ref left, ref right, .. } => {
+                ret.push_str(&expression(left));
+                ret.push_str(&edge(expr, left, "left"));
+                ret.push_str(&expression(right));
+                ret.push_str(&edge(expr, right, "right"));
+            }
+            ast::Expression::Parenthesis { expr: ref e } => {
+                ret.push_str(&expression(e));
+                ret.push_str(&edge(expr, e, "expr"));
+            }
+            _ => (),
+        }
+        ret
+    }
+
+    fn node<N>(node: &ast::Node<N>, label: &String) -> String {
+        format!("\t\"{:?}\" [shape=box, label=\"{}\"];\n",
+                node as *const ast::Node<N>,
+                label)
+    }
+
+    fn node_var(var: &ast::Variable) -> String {
+        format!("\t\"{:?}\" [shape=box, label=\"{}\"];\n",
+                var as *const ast::Variable,
+                print_simple::variable(var))
+    }
+
+    fn edge<N, M>(from: &ast::Node<N>, to: &ast::Node<M>, label: &str) -> String {
+        format!("\t\"{:?}\" -> \"{:?}\" [label=\"{}\"];\n",
+                from as *const ast::Node<N>,
+                to as *const ast::Node<M>,
+                label)
+    }
+
+    fn edge_to_var<N>(from: &ast::Node<N>, to: &ast::Variable) -> String {
+        format!("\t\"{:?}\" -> \"{:?}\" [label=\"var\"];\n",
+                from as *const ast::Node<N>,
+                to as *const ast::Variable)
+    }
+
+    #[cfg(test)]
+    mod test {
+        use super::*;
+        use pest::prelude::StringInput;
+        use ::front::pest;
+
+        #[test]
+        fn test() {
+            let input = "
+                int foo(int bar, float baz) {
+                    int boo;
+                    boo = (2 + 3) * bar;
+                    while (baz < 2.3) {
+                        baz = baz + 1;
+                    }
+                    return (boo + 2);
+                }
+            ";
+
+            let mut parser = pest::Rdp::new(StringInput::new(input));
+            parser.function();
+            print!("{}", function(&parser.parse_function()));
+        }
+
     }
 }
