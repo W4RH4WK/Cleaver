@@ -1,4 +1,4 @@
-pub mod print_simple {
+pub mod simple {
     use ::front::ast;
 
     pub fn function(fun: &ast::Node<ast::Function>) -> String {
@@ -51,23 +51,25 @@ pub mod print_simple {
     }
 
     pub fn variable(var: &ast::Variable) -> String {
-        format!("{}_{}({:?})", var.id, var.name, var.type_)
+        format!("{}_{} ({:?})", var.id, var.name, var.type_)
     }
 }
 
-pub mod print_dot {
+pub mod dot {
     use ::front::ast;
-    use super::print_simple;
+    use super::simple;
 
     pub fn function(fun: &ast::Node<ast::Function>) -> String {
-        format!("digraph {}_{} {{\n{}}}\n",
+        format!("digraph {}_{} {{\n{}{}{}}}\n",
                 fun.node.filename,
                 fun.node.name,
+                node(fun, &simple::function(fun)),
+                edge(fun, &fun.node.body, "body"),
                 statement(&fun.node.body))
     }
 
     fn statement(stmt: &ast::Node<ast::Statement>) -> String {
-        let mut ret = node(stmt, &print_simple::statement(stmt));
+        let mut ret = node(stmt, &simple::statement(stmt));
         match stmt.node {
             ast::Statement::Expression { ref expr } => {
                 ret.push_str(&expression(expr));
@@ -75,7 +77,7 @@ pub mod print_dot {
             }
             ast::Statement::Declaration { ref var } => {
                 ret.push_str(&node_var(var));
-                ret.push_str(&edge_to_var(stmt, var));
+                ret.push_str(&edge_to_var(stmt, var))
             }
             ast::Statement::Assignment { ref var, ref expr } => {
                 ret.push_str(&node_var(var));
@@ -115,7 +117,7 @@ pub mod print_dot {
     }
 
     fn expression(expr: &ast::Node<ast::Expression>) -> String {
-        let mut ret = node(expr, &print_simple::expression(expr));
+        let mut ret = node(expr, &simple::expression(expr));
         match expr.node {
             ast::Expression::Call { ref args, .. } => {
                 for (i, arg) in args.iter().enumerate() {
@@ -123,7 +125,8 @@ pub mod print_dot {
                     ret.push_str(&edge(expr, arg, &*i.to_string()));
                 }
             }
-            ast::Expression::Unary { expr: ref e, .. } => {
+            ast::Expression::Unary { expr: ref e, .. } |
+            ast::Expression::Parenthesis { expr: ref e } => {
                 ret.push_str(&expression(e));
                 ret.push_str(&edge(expr, e, "expr"));
             }
@@ -132,10 +135,6 @@ pub mod print_dot {
                 ret.push_str(&edge(expr, left, "left"));
                 ret.push_str(&expression(right));
                 ret.push_str(&edge(expr, right, "right"));
-            }
-            ast::Expression::Parenthesis { expr: ref e } => {
-                ret.push_str(&expression(e));
-                ret.push_str(&edge(expr, e, "expr"));
             }
             _ => (),
         }
@@ -151,7 +150,7 @@ pub mod print_dot {
     fn node_var(var: &ast::Variable) -> String {
         format!("\t\"{:?}\" [shape=box, label=\"{}\"];\n",
                 var as *const ast::Variable,
-                print_simple::variable(var))
+                simple::variable(var))
     }
 
     fn edge<N, M>(from: &ast::Node<N>, to: &ast::Node<M>, label: &str) -> String {
@@ -165,31 +164,5 @@ pub mod print_dot {
         format!("\t\"{:?}\" -> \"{:?}\" [label=\"var\"];\n",
                 from as *const ast::Node<N>,
                 to as *const ast::Variable)
-    }
-
-    #[cfg(test)]
-    mod test {
-        use super::*;
-        use pest::prelude::StringInput;
-        use ::front::pest;
-
-        #[test]
-        fn test() {
-            let input = "
-                int foo(int bar, float baz) {
-                    int boo;
-                    boo = (2 + 3) * bar;
-                    while (baz < 2.3) {
-                        baz = baz + 1;
-                    }
-                    return (boo + 2);
-                }
-            ";
-
-            let mut parser = pest::Rdp::new(StringInput::new(input));
-            parser.function();
-            print!("{}", function(&parser.parse_function()));
-        }
-
     }
 }
