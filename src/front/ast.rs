@@ -134,14 +134,15 @@ pub enum Statement {
 }
 
 impl Node<Statement> {
-    pub fn walk<S, E>(&self, do_stmt: &S, do_expr: &E)
-        where S: Fn(&Node<Statement>),
-              E: Fn(&Node<Expression>)
+    pub fn walk<S, E>(&self, do_stmt: &mut S, do_expr: &mut E)
+        where S: FnMut(&Node<Statement>),
+              E: FnMut(&Node<Expression>)
     {
         do_stmt(self);
         match self.node {
             Statement::Expression { ref expr } => expr.walk(do_expr),
             Statement::Assignment { ref expr, .. } => expr.walk(do_expr),
+            Statement::Return { expr: Some(ref expr) } => expr.walk(do_expr),
             Statement::If { ref cond, ref on_true, ref on_false } => {
                 cond.walk(do_expr);
                 on_true.walk(do_stmt, do_expr);
@@ -153,7 +154,6 @@ impl Node<Statement> {
                 cond.walk(do_expr);
                 body.walk(do_stmt, do_expr);
             }
-            Statement::Return { expr: Some(ref expr) } => expr.walk(do_expr),
             Statement::Compound { ref stmts, .. } => {
                 for stmt in stmts.iter() {
                     stmt.walk(do_stmt, do_expr);
@@ -191,8 +191,8 @@ pub enum Expression {
 }
 
 impl Node<Expression> {
-    pub fn walk<E>(&self, do_expr: &E)
-        where E: Fn(&Node<Expression>)
+    pub fn walk<E>(&self, do_expr: &mut E)
+        where E: FnMut(&Node<Expression>)
     {
         do_expr(self);
         match self.node {
@@ -202,11 +202,11 @@ impl Node<Expression> {
                 }
             }
             Expression::Unary { ref expr, .. } => expr.walk(do_expr),
+            Expression::Parenthesis { ref expr } => expr.walk(do_expr),
             Expression::Binary { ref left, ref right, .. } => {
                 left.walk(do_expr);
                 right.walk(do_expr);
             }
-            Expression::Parenthesis { ref expr } => expr.walk(do_expr),
             _ => (),
         }
     }
