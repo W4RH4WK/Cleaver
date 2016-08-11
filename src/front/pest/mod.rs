@@ -81,7 +81,7 @@ impl_rdp! {
 
         literal_expr = { literal }
 
-        call_expr = { identifier ~ ["("] ~ expr_list? ~ [")"] }
+        call_expr = { identifier ~ lparenth ~ expr_list? ~ rparenth }
 
         expr_list = _{ wrap_expr ~ ([","] ~ wrap_expr)* }
 
@@ -89,7 +89,11 @@ impl_rdp! {
 
         variable_expr = { variable }
 
-        parenth_expr = { ["("] ~ expression ~ [")"] }
+        parenth_expr = { lparenth ~ expression ~ rparenth }
+
+        lparenth = { ["("] }
+
+        rparenth = { [")"] }
 
 // ------------------------------------------------------------ Statements
 
@@ -116,7 +120,11 @@ impl_rdp! {
 
         return_stmt = { ["return"] ~ wrap_expr? ~ [";"] }
 
-        compound_stmt = { ["{"] ~ wrap_stmt* ~ ["}"] }
+        compound_stmt = { lbrace ~ wrap_stmt* ~ rbrace }
+
+        lbrace = { ["{"] }
+
+        rbrace = { ["}"] }
 
         wrap_stmt = { statement }
 
@@ -215,7 +223,7 @@ impl_rdp! {
                     },
                 },
 
-            (pos: parenth_expr, expr: parse_expression()) =>
+            (pos: parenth_expr, _: lparenth, expr: parse_expression(), _: rparenth) =>
                 ast::Node {
                     pos: Position::from(self.input().line_col(pos.start)),
                     node: ast::Expression::Parenthesis {
@@ -239,7 +247,7 @@ impl_rdp! {
                     },
                 },
 
-            (pos: call_expr, &fun: identifier, args: parse_expressions()) =>
+            (pos: call_expr, &fun: identifier, _: lparenth, args: parse_expressions(), _:rparenth) =>
                 ast::Node {
                     pos: Position::from(self.input().line_col(pos.start)),
                     node: ast::Expression::Call {
@@ -325,7 +333,7 @@ impl_rdp! {
                 }
             },
 
-            (pos: compound_stmt, stmts: parse_statements()) => {
+            (pos: compound_stmt, _: lbrace, stmts: parse_statements(), _: rbrace) => {
                 ast::Node {
                     pos: Position::from(self.input().line_col(pos.start)),
                     node: ast::Statement::Compound {
