@@ -67,7 +67,9 @@ pub fn symbolize(fun: &mut ast::Node<ast::Function>) -> Result<(), String> {
     symbolize_statement(fun.node.symbols.clone(), &mut fun.node.body)
 }
 
-fn symbolize_statement(symbols: Rc<RefCell<SymbolTable>>, stmt: &mut ast::Node<ast::Statement>) -> Result<(), String> {
+fn symbolize_statement(symbols: Rc<RefCell<SymbolTable>>,
+                       stmt: &mut ast::Node<ast::Statement>)
+                       -> Result<(), String> {
     match stmt.node {
         ast::Statement::Expression { ref mut expr } => symbolize_expression(symbols, expr),
         ast::Statement::Declaration { ref mut var } => {
@@ -104,7 +106,9 @@ fn symbolize_statement(symbols: Rc<RefCell<SymbolTable>>, stmt: &mut ast::Node<a
     }
 }
 
-fn symbolize_expression(symbols: Rc<RefCell<SymbolTable>>, expr: &mut ast::Node<ast::Expression>) -> Result<(), String> {
+fn symbolize_expression(symbols: Rc<RefCell<SymbolTable>>,
+                        expr: &mut ast::Node<ast::Expression>)
+                        -> Result<(), String> {
     match expr.node {
         ast::Expression::Variable { ref mut var } => {
             *var = try!(symbols.borrow().lookup(&var.name));
