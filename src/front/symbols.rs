@@ -45,7 +45,7 @@ impl SymbolTable {
         Ok(new)
     }
 
-    pub fn lookup(&self, var: &String) -> Result<Rc<ast::Variable>, String> {
+    pub fn lookup(&self, var: &str) -> Result<Rc<ast::Variable>, String> {
         if let Some(v) = self.vars.get(var) {
             return Ok(v.clone());
         }
@@ -60,7 +60,7 @@ impl SymbolTable {
 
 pub fn symbolize(fun: &mut ast::Node<ast::Function>) -> Result<(), String> {
     // arguments
-    for arg in fun.node.args.iter_mut() {
+    for arg in &mut fun.node.args {
         *arg = try!(fun.node.symbols.borrow_mut().insert(arg));
     }
 

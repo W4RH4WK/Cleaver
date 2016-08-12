@@ -141,7 +141,7 @@ pub mod dot {
         ret
     }
 
-    fn node<N>(node: &ast::Node<N>, label: &String) -> String {
+    fn node<N>(node: &ast::Node<N>, label: &str) -> String {
         format!("\t\"{:?}\" [shape=box, label=\"{}\"];\n",
                 node as *const ast::Node<N>,
                 label)
