@@ -7,6 +7,7 @@ readme = "README.md"
 license = "MIT License"
 
 [dependencies]
+clap = "2"
 clippy = { version = "*", optional = true }
 pest = "0.3.2"
 
