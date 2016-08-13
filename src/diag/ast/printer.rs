@@ -60,9 +60,11 @@ pub mod dot {
     use super::simple;
 
     pub fn function(fun: &ast::Node<ast::Function>) -> String {
-        format!("digraph {}_{} {{\n{}{}{}}}\n",
+        let options = vec!["\tnodesep=0.6".to_owned()];
+        format!("digraph \"{}_{}\" {{\n{}\n{}{}{}}}\n",
                 fun.node.filename,
                 fun.node.name,
+                options.join("\n"),
                 node(fun, &simple::function(fun)),
                 edge(fun, &fun.node.body, "body"),
                 statement(&fun.node.body))
@@ -142,7 +144,7 @@ pub mod dot {
     }
 
     fn node<N>(node: &ast::Node<N>, label: &str) -> String {
-        format!("\t\"{:?}\" [shape=box, label=\"{}\"];\n",
+        format!("\t\"{:?}\" [shape=box, label=\"{}\", fontname=\"Monospace\"];\n",
                 node as *const ast::Node<N>,
                 label)
     }
