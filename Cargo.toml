@@ -7,7 +7,12 @@ readme = "README.md"
 license = "MIT License"
 
 [dependencies]
+clippy = { version = "*", optional = true }
 pest = "0.3.2"
+
+[features]
+default = []
+dev = ['clippy']
 
 [[bin]]
 name = "cleaver"

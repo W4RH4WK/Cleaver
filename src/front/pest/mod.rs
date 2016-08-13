@@ -1,13 +1,19 @@
+#![cfg_attr(feature = "clippy", allow(block_in_if_condition_stmt))]
+
 use std::cell::RefCell;
-use std::collections::LinkedList;
-use std::collections::HashMap;
+use std::collections::{HashMap, LinkedList};
 use std::rc::Rc;
 
 use pest::prelude::*;
 
-use ::front::Position;
+use ::front::{ast, Position};
 use ::front::symbols::SymbolTable;
-use ::front::ast;
+
+pub fn parse(input: &str) -> HashMap<String, ast::Node<ast::Function>> {
+    let mut parser = Rdp::new(StringInput::new(input));
+    parser.program();
+    parser.parse_program()
+}
 
 impl_rdp! {
     grammar! {
