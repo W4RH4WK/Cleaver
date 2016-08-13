@@ -2,6 +2,9 @@
 
 use std::cell::RefCell;
 use std::collections::{HashMap, LinkedList};
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
 use std::rc::Rc;
 
 use pest::prelude::*;
@@ -13,6 +16,38 @@ pub fn parse(input: &str) -> HashMap<String, ast::Node<ast::Function>> {
     let mut parser = Rdp::new(StringInput::new(input));
     parser.program();
     parser.parse_program()
+}
+
+pub fn parse_file(filepath: &Path) -> HashMap<String, ast::Node<ast::Function>> {
+    // get file content
+    let mut content = String::new();
+    {
+        let mut file = File::open(filepath).unwrap();
+        file.read_to_string(&mut content).unwrap();
+    }
+
+    // run parser
+    let mut functions = parse(&content);
+
+    // set filename
+    for (_, f) in &mut functions {
+        f.node.filename = filepath.file_name().unwrap().to_str().unwrap().to_owned();
+    }
+
+    functions
+}
+
+pub fn parse_files(filepaths: &Vec<&Path>) -> HashMap<String, ast::Node<ast::Function>> {
+    let mut functions = HashMap::new();
+
+    // parse all input files
+    for filepath in filepaths {
+        for (name, function) in parse_file(filepath) {
+            functions.insert(name, function);
+        }
+    }
+
+    functions
 }
 
 impl_rdp! {

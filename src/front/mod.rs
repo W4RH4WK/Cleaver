@@ -9,37 +9,11 @@ pub mod pest;
 pub mod symbols;
 
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
 use std::path::Path;
 
-pub fn parse_file(filepath: &Path) -> HashMap<String, ast::Node<ast::Function>> {
-    // get file content
-    let mut content = String::new();
-    {
-        let mut file = File::open(filepath).unwrap();
-        file.read_to_string(&mut content).unwrap();
-    }
-
+pub fn process(filepaths: &Vec<&Path>) -> HashMap<String, ast::Node<ast::Function>> {
     // run parser
-    let mut functions = pest::parse(&content);
-
-    for (_, f) in &mut functions {
-        f.node.filename = filepath.file_name().unwrap().to_str().unwrap().to_owned();
-    }
-
-    functions
-}
-
-pub fn process_files(files: &Vec<&Path>) -> HashMap<String, ast::Node<ast::Function>> {
-    let mut functions = HashMap::new();
-
-    // parse all input files
-    for file in files {
-        for (name, function) in parse_file(file) {
-            functions.insert(name, function);
-        }
-    }
+    let mut functions = pest::parse_files(filepaths);
 
     // symbolize everything
     for (_, ref mut f) in &mut functions {

@@ -29,7 +29,7 @@ fn main() {
 
     // run frontend
     // TODO time process time (diagnostic)
-    let functions = front::process_files(&inputs);
+    let functions = front::process(&inputs);
 
     // diagnostics output directory
     let diag_path = PathBuf::from("diag");
