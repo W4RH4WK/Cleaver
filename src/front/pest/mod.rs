@@ -3,7 +3,7 @@
 use std::cell::RefCell;
 use std::collections::{HashMap, LinkedList};
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::path::Path;
 use std::rc::Rc;
 
@@ -11,14 +11,17 @@ use pest::prelude::*;
 
 use ::front::{ast, Position};
 use ::front::symbols::SymbolTable;
+use ::diag;
 
 pub fn parse(input: &str) -> HashMap<String, ast::Node<ast::Function>> {
     let mut parser = Rdp::new(StringInput::new(input));
-    parser.program();
+    assert!(parser.program());
     parser.parse_program()
 }
 
-pub fn parse_file(filepath: &Path) -> HashMap<String, ast::Node<ast::Function>> {
+pub fn parse_file(filepath: &Path,
+                  config: &Option<diag::Config>)
+                  -> HashMap<String, ast::Node<ast::Function>> {
     // get file content
     let mut content = String::new();
     {
@@ -27,7 +30,27 @@ pub fn parse_file(filepath: &Path) -> HashMap<String, ast::Node<ast::Function>> 
     }
 
     // run parser
-    let mut functions = parse(&content);
+    let mut functions;
+    {
+        let mut parser = Rdp::new(StringInput::new(&content));
+        assert!(parser.program());
+
+        // output tokens
+        if config.as_ref().map_or(false, |c| c.dump_tokens) {
+            // filepath
+            let token_filepath = config.as_ref()
+                .unwrap()
+                .output_dir()
+                .join(format!("tokens_{}.txt",
+                              filepath.file_name().unwrap().to_str().unwrap()));
+
+            // dump tokens
+            Write::write_all(&mut File::create(token_filepath.as_path()).unwrap(),
+                             format!("{:?}", parser.queue()).as_bytes());
+        }
+
+        functions = parser.parse_program()
+    }
 
     // set filename
     for (_, f) in &mut functions {
@@ -37,12 +60,14 @@ pub fn parse_file(filepath: &Path) -> HashMap<String, ast::Node<ast::Function>> 
     functions
 }
 
-pub fn parse_files(filepaths: &Vec<&Path>) -> HashMap<String, ast::Node<ast::Function>> {
+pub fn parse_files(filepaths: &[&Path],
+                   config: &Option<diag::Config>)
+                   -> HashMap<String, ast::Node<ast::Function>> {
     let mut functions = HashMap::new();
 
     // parse all input files
     for filepath in filepaths {
-        for (name, function) in parse_file(filepath) {
+        for (name, function) in parse_file(filepath, config) {
             functions.insert(name, function);
         }
     }
@@ -171,7 +196,7 @@ impl_rdp! {
 
 // ------------------------------------------------------------ Program
 
-        program = _{ wrap_fun* }
+        program = _{ wrap_fun+ }
 
         function = { type_ ~ identifier ~ ["("] ~ (decl_list)? ~ [")"] ~ statement }
 

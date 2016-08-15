@@ -9,15 +9,59 @@ pub mod pest;
 pub mod symbols;
 
 use std::collections::HashMap;
+use std::fs::File;
+use std::io::Write;
 use std::path::Path;
 
-pub fn process(filepaths: &Vec<&Path>) -> HashMap<String, ast::Node<ast::Function>> {
+use ::diag;
+
+pub fn process(filepaths: &[&Path]) -> HashMap<String, ast::Node<ast::Function>> {
+    process_with_diag(filepaths, &None)
+}
+
+pub fn process_with_diag(filepaths: &[&Path],
+                         config: &Option<diag::Config>)
+                         -> HashMap<String, ast::Node<ast::Function>> {
     // run parser
-    let mut functions = pest::parse_files(filepaths);
+    let mut functions = pest::parse_files(filepaths, config);
 
     // symbolize everything
     for (_, ref mut f) in &mut functions {
         symbols::symbolize(f);
+    }
+
+    // write dot output for functions
+    if config.as_ref().map_or(false, |c| c.dump_ast) {
+        for (ref name, ref f) in &functions {
+            // filepath
+            let filepath = config.as_ref()
+                .unwrap()
+                .output_dir()
+                .join(format!("ast_{}_{}.dot", f.node.filename, name));
+
+            // dump
+            Write::write_all(&mut File::create(filepath.as_path()).unwrap(),
+                             diag::ast::printer::dot::function(f).as_bytes());
+
+            // call dot
+            diag::dot::run(filepath.as_path());
+        }
+    }
+
+    // write symbol table for functions
+    if config.as_ref().map_or(false, |c| c.dump_symbol_table) {
+        for (ref name, ref f) in &functions {
+            // filepath
+            let filepath = config.as_ref()
+                .unwrap()
+                .output_dir()
+                .join(format!("symbols_{}_{}.txt", f.node.filename, name));
+
+            // dump
+            Write::write_all(&mut File::create(filepath.as_path()).unwrap(),
+                             diag::symbols::print(f).as_bytes());
+
+        }
     }
 
     // TODO type checks
