@@ -134,33 +134,38 @@ pub enum Statement {
 }
 
 impl Node<Statement> {
-    pub fn walk<S, E>(&self, do_stmt: &mut S, do_expr: &mut E)
-        where S: FnMut(&Node<Statement>),
-              E: FnMut(&Node<Expression>)
-    {
+    pub fn walk_stmt(&self, do_stmt: &mut FnMut(&Node<Statement>)) {
         do_stmt(self);
         match self.node {
-            Statement::Expression { ref expr } => expr.walk(do_expr),
-            Statement::Assignment { ref expr, .. } => expr.walk(do_expr),
-            Statement::Return { expr: Some(ref expr) } => expr.walk(do_expr),
-            Statement::If { ref cond, ref on_true, ref on_false } => {
-                cond.walk(do_expr);
-                on_true.walk(do_stmt, do_expr);
+            Statement::If { ref on_true, ref on_false, .. } => {
+                on_true.walk_stmt(do_stmt);
                 if let Some(ref stmt) = *on_false {
-                    stmt.walk(do_stmt, do_expr);
+                    stmt.walk_stmt(do_stmt);
                 }
             }
-            Statement::While { ref cond, ref body } => {
-                cond.walk(do_expr);
-                body.walk(do_stmt, do_expr);
+            Statement::While { ref body, .. } => {
+                body.walk_stmt(do_stmt);
             }
             Statement::Compound { ref stmts, .. } => {
                 for stmt in stmts.iter() {
-                    stmt.walk(do_stmt, do_expr);
+                    stmt.walk_stmt(do_stmt);
                 }
             }
             _ => (),
         }
+    }
+
+    pub fn walk_expr(&self, do_expr: &mut FnMut(&Node<Expression>)) {
+        self.walk_stmt(&mut |stmt| {
+            match stmt.node {
+                Statement::Expression { ref expr } => do_expr(expr),
+                Statement::Assignment { ref expr, .. } => do_expr(expr),
+                Statement::If { ref cond, .. } => do_expr(cond),
+                Statement::While { ref cond, .. } => do_expr(cond),
+                Statement::Return { expr: Some(ref expr) } => do_expr(expr),
+                _ => (),
+            }
+        })
     }
 }
 
@@ -191,21 +196,19 @@ pub enum Expression {
 }
 
 impl Node<Expression> {
-    pub fn walk<E>(&self, do_expr: &mut E)
-        where E: FnMut(&Node<Expression>)
-    {
+    pub fn walk_expr(&self, do_expr: &mut FnMut(&Node<Expression>)) {
         do_expr(self);
         match self.node {
             Expression::Call { ref args, .. } => {
                 for arg in args.iter() {
-                    arg.walk(do_expr);
+                    arg.walk_expr(do_expr);
                 }
             }
-            Expression::Unary { ref expr, .. } => expr.walk(do_expr),
-            Expression::Parenthesis { ref expr } => expr.walk(do_expr),
+            Expression::Unary { ref expr, .. } => expr.walk_expr(do_expr),
+            Expression::Parenthesis { ref expr } => expr.walk_expr(do_expr),
             Expression::Binary { ref left, ref right, .. } => {
-                left.walk(do_expr);
-                right.walk(do_expr);
+                left.walk_expr(do_expr);
+                right.walk_expr(do_expr);
             }
             _ => (),
         }
