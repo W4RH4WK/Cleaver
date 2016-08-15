@@ -1,0 +1,9 @@
+void main() {
+    int b;
+    b = 10;
+    if (5 < b)
+        if (6 < b)
+            b = 5;
+        else
+            b = 2;
+}
