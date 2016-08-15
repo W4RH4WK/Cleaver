@@ -1,0 +1,25 @@
+void main() {
+    int i;
+    i = 2 + 3;
+    int a;
+    int b;
+
+    if (0 < i) {
+        int c;
+        a = 7;
+        c = 5;
+    } else if (3 < i) {
+        a = 2;
+    } else {
+        int c;
+        c = 7;
+        b = 1;
+        if (c < 2) {
+            int d;
+            d = 16;
+            i = 0;
+        }
+    }
+
+    b = 2;
+}
