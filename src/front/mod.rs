@@ -13,21 +13,22 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
+use ::analysis::semantic as sema;
 use ::diag;
 
-pub fn process(filepaths: &[&Path]) -> HashMap<String, ast::Node<ast::Function>> {
+pub fn process(filepaths: &[&Path]) -> Result<HashMap<String, ast::Node<ast::Function>>, String> {
     process_with_diag(filepaths, &None)
 }
 
 pub fn process_with_diag(filepaths: &[&Path],
                          config: &Option<diag::Config>)
-                         -> HashMap<String, ast::Node<ast::Function>> {
+                         -> Result<HashMap<String, ast::Node<ast::Function>>, String> {
     // run parser
     let mut functions = pest::parse_files(filepaths, config);
 
     // symbolize everything
     for (_, ref mut f) in &mut functions {
-        symbols::symbolize(f);
+        try!(symbols::symbolize(f));
     }
 
     // write dot output for functions
@@ -64,11 +65,16 @@ pub fn process_with_diag(filepaths: &[&Path],
         }
     }
 
+    // all variables must be non-void
+    for (_, ref f) in &functions {
+        try!(sema::symbols::check_void_variable(f));
+    }
+
     // TODO type checks
 
     // TODO semantic checks
 
-    functions
+    Ok(functions)
 }
 
 #[derive(PartialEq, Copy, Clone, Debug)]

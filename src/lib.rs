@@ -6,6 +6,7 @@
 extern crate pest;
 extern crate rand;
 
+pub mod analysis;
 pub mod diag;
 pub mod front;
 pub mod utils;

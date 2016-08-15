@@ -33,5 +33,5 @@ fn main() {
 
     // run frontend
     // TODO time process time (diagnostics)
-    let functions = front::process_with_diag(&inputs, &config);
+    let functions = front::process_with_diag(&inputs, &config).expect("Frontend");
 }
