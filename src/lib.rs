@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![cfg_attr(feature = "clippy", allow(unknown_lints))]
 
 #![recursion_limit = "200"]
 #[macro_use]

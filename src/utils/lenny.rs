@@ -17,7 +17,7 @@ static MOUTHS: &'static [&'static str] = include!("lenny_mouths.inc");
 pub fn gen() -> String {
     let (ref l_ear, ref r_ear) = EARS[random::<usize>() % EARS.len()];
     let (ref l_eye, ref r_eye) = EYES[random::<usize>() % EYES.len()];
-    let ref mouth = MOUTHS[random::<usize>() % MOUTHS.len()];
+    let mouth = &MOUTHS[random::<usize>() % MOUTHS.len()];
     format!("{}{}{}{}{}", l_ear, l_eye, mouth, r_eye, r_ear)
 }
 

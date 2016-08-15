@@ -144,27 +144,22 @@ pub mod dot {
     }
 
     fn node<N>(node: &ast::Node<N>, label: &str) -> String {
-        format!("\t\"{:?}\" [shape=box, label=\"{}\", fontname=\"Monospace\"];\n",
-                node as *const ast::Node<N>,
+        format!("\t\"{:p}\" [shape=box, label=\"{}\", fontname=\"Monospace\"];\n",
+                node,
                 label)
     }
 
     fn node_var(var: &ast::Variable) -> String {
-        format!("\t\"{:?}\" [shape=box, label=\"{}\"];\n",
-                var as *const ast::Variable,
+        format!("\t\"{:p}\" [shape=box, label=\"{}\"];\n",
+                var,
                 simple::variable(var))
     }
 
     fn edge<N, M>(from: &ast::Node<N>, to: &ast::Node<M>, label: &str) -> String {
-        format!("\t\"{:?}\" -> \"{:?}\" [label=\"{}\"];\n",
-                from as *const ast::Node<N>,
-                to as *const ast::Node<M>,
-                label)
+        format!("\t\"{:p}\" -> \"{:p}\" [label=\"{}\"];\n", from, to, label)
     }
 
     fn edge_to_var<N>(from: &ast::Node<N>, to: &ast::Variable) -> String {
-        format!("\t\"{:?}\" -> \"{:?}\" [label=\"var\"];\n",
-                from as *const ast::Node<N>,
-                to as *const ast::Variable)
+        format!("\t\"{:p}\" -> \"{:p}\" [label=\"var\"];\n", from, to)
     }
 }
