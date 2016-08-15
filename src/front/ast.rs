@@ -134,28 +134,29 @@ pub enum Statement {
 }
 
 impl Node<Statement> {
-    pub fn walk_stmt(&self, do_stmt: &mut FnMut(&Node<Statement>)) {
-        do_stmt(self);
+    pub fn walk_stmt(&self, do_stmt: &mut FnMut(&Node<Statement>) -> bool) -> bool {
+        do_stmt(self) || return false;
         match self.node {
             Statement::If { ref on_true, ref on_false, .. } => {
-                on_true.walk_stmt(do_stmt);
+                on_true.walk_stmt(do_stmt) ||
                 if let Some(ref stmt) = *on_false {
-                    stmt.walk_stmt(do_stmt);
+                    stmt.walk_stmt(do_stmt)
+                } else {
+                    true
                 }
             }
-            Statement::While { ref body, .. } => {
-                body.walk_stmt(do_stmt);
-            }
+            Statement::While { ref body, .. } => body.walk_stmt(do_stmt),
             Statement::Compound { ref stmts, .. } => {
                 for stmt in stmts.iter() {
-                    stmt.walk_stmt(do_stmt);
+                    stmt.walk_stmt(do_stmt) || return false;
                 }
+                true
             }
-            _ => (),
+            _ => true,
         }
     }
 
-    pub fn walk_expr(&self, do_expr: &mut FnMut(&Node<Expression>)) {
+    pub fn walk_expr(&self, do_expr: &mut FnMut(&Node<Expression>) -> bool) -> bool {
         self.walk_stmt(&mut |stmt| {
             match stmt.node {
                 Statement::Expression { ref expr } => do_expr(expr),
@@ -163,7 +164,7 @@ impl Node<Statement> {
                 Statement::If { ref cond, .. } => do_expr(cond),
                 Statement::While { ref cond, .. } => do_expr(cond),
                 Statement::Return { expr: Some(ref expr) } => do_expr(expr),
-                _ => (),
+                _ => true,
             }
         })
     }
@@ -196,21 +197,22 @@ pub enum Expression {
 }
 
 impl Node<Expression> {
-    pub fn walk_expr(&self, do_expr: &mut FnMut(&Node<Expression>)) {
-        do_expr(self);
+    pub fn walk_expr(&self, do_expr: &mut FnMut(&Node<Expression>) -> bool) -> bool {
+        do_expr(self) || return false;
         match self.node {
             Expression::Call { ref args, .. } => {
                 for arg in args.iter() {
-                    arg.walk_expr(do_expr);
+                    arg.walk_expr(do_expr) || return false;
                 }
+                true
             }
             Expression::Unary { ref expr, .. } => expr.walk_expr(do_expr),
             Expression::Parenthesis { ref expr } => expr.walk_expr(do_expr),
             Expression::Binary { ref left, ref right, .. } => {
-                left.walk_expr(do_expr);
-                right.walk_expr(do_expr);
+                left.walk_expr(do_expr) || return false;
+                right.walk_expr(do_expr)
             }
-            _ => (),
+            _ => true,
         }
     }
 }
