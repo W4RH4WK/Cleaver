@@ -13,6 +13,7 @@ use std::io::Write;
 use std::path::Path;
 
 use ::analysis::semantic as sema;
+use ::analysis::types as type_checker;
 use ::diag;
 
 pub fn process(filepaths: &[&Path]) -> Result<ast::Functions, String> {
@@ -69,9 +70,17 @@ pub fn process_with_diag(filepaths: &[&Path],
         try!(sema::symbols::check_void_variable(f));
     }
 
-    // TODO type checks
+    // TODO check for unknown functions
 
-    // TODO semantic checks
+    // check those types
+    for (_, ref f) in &functions {
+        try!(type_checker::check_function(&type_checker::Context {
+            current: f,
+            functions: &functions,
+        }));
+    }
+
+    // TODO additional semantic checks
 
     Ok(functions)
 }
