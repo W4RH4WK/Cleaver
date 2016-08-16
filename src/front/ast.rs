@@ -5,6 +5,8 @@ use std::rc::Rc;
 use super::Position;
 use super::symbols::SymbolTable;
 
+pub type Functions = HashMap<String, Node<Function>>;
+
 #[derive(PartialEq, Debug)]
 pub struct Node<I> {
     pub pos: Position,
@@ -29,7 +31,7 @@ pub enum Literal {
 }
 
 impl Literal {
-    fn get_type(&self) -> Type {
+    pub fn get_type(&self) -> Type {
         match *self {
             Literal::Bool(_) => Type::Bool,
             Literal::Int(_) => Type::Int,
@@ -90,7 +92,7 @@ pub enum BinaryOp {
 
 #[derive(PartialEq, Debug)]
 pub struct Program {
-    pub functions: HashMap<String, Node<Function>>,
+    pub functions: Functions,
 }
 
 #[derive(PartialEq, Debug)]

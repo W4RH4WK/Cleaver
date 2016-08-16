@@ -8,7 +8,6 @@ pub mod ast;
 pub mod pest;
 pub mod symbols;
 
-use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
@@ -16,13 +15,13 @@ use std::path::Path;
 use ::analysis::semantic as sema;
 use ::diag;
 
-pub fn process(filepaths: &[&Path]) -> Result<HashMap<String, ast::Node<ast::Function>>, String> {
+pub fn process(filepaths: &[&Path]) -> Result<ast::Functions, String> {
     process_with_diag(filepaths, &None)
 }
 
 pub fn process_with_diag(filepaths: &[&Path],
                          config: &Option<diag::Config>)
-                         -> Result<HashMap<String, ast::Node<ast::Function>>, String> {
+                         -> Result<ast::Functions, String> {
     // run parser
     let mut functions = pest::parse_files(filepaths, config);
 

@@ -1,7 +1,7 @@
 #![cfg_attr(feature = "clippy", allow(block_in_if_condition_stmt))]
 
 use std::cell::RefCell;
-use std::collections::{HashMap, LinkedList};
+use std::collections::LinkedList;
 use std::fs::File;
 use std::io::{Read, Write};
 use std::path::Path;
@@ -13,15 +13,13 @@ use ::front::{ast, Position};
 use ::front::symbols::SymbolTable;
 use ::diag;
 
-pub fn parse(input: &str) -> HashMap<String, ast::Node<ast::Function>> {
+pub fn parse(input: &str) -> ast::Functions {
     let mut parser = Rdp::new(StringInput::new(input));
     assert!(parser.program());
     parser.parse_program()
 }
 
-pub fn parse_file(filepath: &Path,
-                  config: &Option<diag::Config>)
-                  -> HashMap<String, ast::Node<ast::Function>> {
+pub fn parse_file(filepath: &Path, config: &Option<diag::Config>) -> ast::Functions {
     // get file content
     let mut content = String::new();
     {
@@ -60,10 +58,8 @@ pub fn parse_file(filepath: &Path,
     functions
 }
 
-pub fn parse_files(filepaths: &[&Path],
-                   config: &Option<diag::Config>)
-                   -> HashMap<String, ast::Node<ast::Function>> {
-    let mut functions = HashMap::new();
+pub fn parse_files(filepaths: &[&Path], config: &Option<diag::Config>) -> ast::Functions {
+    let mut functions = ast::Functions::new();
 
     // parse all input files
     for filepath in filepaths {
@@ -439,12 +435,12 @@ impl_rdp! {
             }
         }
 
-        parse_program(&self) -> HashMap<String, ast::Node<ast::Function>> {
+        parse_program(&self) -> ast::Functions {
             (_: wrap_fun, fun: parse_function(), mut tail: parse_program()) => {
                 tail.insert(fun.node.name.clone(), fun);
                 tail
             },
-            () => HashMap::new(),
+            () => ast::Functions::new(),
         }
 
         parse_declaration(&self) -> Rc<ast::Variable> {
