@@ -70,7 +70,10 @@ pub fn process_with_diag(filepaths: &[&Path],
         try!(sema::symbols::check_void_variable(f));
     }
 
-    // TODO check for unknown functions
+    // check call expression targets
+    for (_, ref f) in &functions {
+        sema::calls::check_target(&functions, f);
+    }
 
     // check those types
     for (_, ref f) in &functions {
