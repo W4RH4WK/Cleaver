@@ -3,8 +3,8 @@ name = "cleaver"
 version = "0.1.0"
 dependencies = [
  "clap 2.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "clippy 0.0.80 (registry+https://github.com/rust-lang/crates.io-index)",
- "pest 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clippy 0.0.84 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pest 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -34,15 +34,15 @@ dependencies = [
 
 [[package]]
 name = "clippy"
-version = "0.0.80"
+version = "0.0.84"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "clippy_lints 0.0.80 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clippy_lints 0.0.84 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "clippy_lints"
-version = "0.0.80"
+version = "0.0.84"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "matches 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -71,7 +71,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "pest"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -145,12 +145,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum ansi_term 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c877397e09fec7a240af5fa74ad0124054b8066149d6544cd1ace93f8de3be68"
 "checksum bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "aad18937a628ec6abcd26d1489012cc0e18c21798210f491af69ded9b881106d"
 "checksum clap 2.10.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6adb6a046b8155874daf331e6cb6f4a3edf3ea3cbc625809eb4077a384124761"
-"checksum clippy 0.0.80 (registry+https://github.com/rust-lang/crates.io-index)" = "e96469b413984c78285727f94f9c626a1f2006cecdcf813b5d6893c0c85df42f"
-"checksum clippy_lints 0.0.80 (registry+https://github.com/rust-lang/crates.io-index)" = "f11938c4b10c556903bb1c1e717eb038658324bf7197e4cfc159a16417327345"
+"checksum clippy 0.0.84 (registry+https://github.com/rust-lang/crates.io-index)" = "6ef6717e11c8570d47415462b1174aa6afa9fc05a211bbed1a60c2a4eaabb643"
+"checksum clippy_lints 0.0.84 (registry+https://github.com/rust-lang/crates.io-index)" = "7f7c07c65d17f964fd1d6c4dffc629962adbc7ffcba85ef0e7cedc85d1f9e549"
 "checksum libc 0.2.15 (registry+https://github.com/rust-lang/crates.io-index)" = "23e3757828fa702a20072c37ff47938e9dd331b92fac6e223d26d4b7a55f7ee2"
 "checksum matches 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "15305656809ce5a4805b1ff2946892810992197ce1270ff79baded852187942e"
 "checksum nom 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "a5b8c256fd9471521bcb84c3cdba98921497f1a331cbc15b8030fc63b82050ce"
-"checksum pest 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "8f18f734f98241a6a4a6f7b63ccf717f5040ea5df667451d36c9c632a197d277"
+"checksum pest 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "0a6dda33d67c26f0aac90d324ab2eb7239c819fc7b2552fe9faa4fe88441edc8"
 "checksum quine-mc_cluskey 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "07589615d719a60c8dd8a4622e7946465dfef20d1a428f969e3443e7386d5f45"
 "checksum rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)" = "2791d88c6defac799c3f20d74f094ca33b9332612d9aef9078519c82e4fe04a5"
 "checksum regex-syntax 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "31040aad7470ad9d8c46302dcffba337bb4289ca5da2e3cd6e37b64109a85199"
