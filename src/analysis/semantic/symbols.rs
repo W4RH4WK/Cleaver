@@ -25,7 +25,7 @@ pub fn check_void_variable(fun: &ast::Node<ast::Function>) -> Result<(), String>
         }
 
         if cont {
-            cont = fun.node.body.walk_expr(&mut |expr| {
+            cont = fun.node.body.visit_expr(&mut |expr| {
                 match expr.node {
                     ast::Expression::Variable { ref var } => check_var(var),
                     _ => true,
@@ -34,7 +34,7 @@ pub fn check_void_variable(fun: &ast::Node<ast::Function>) -> Result<(), String>
         }
 
         if cont {
-            fun.node.body.walk_stmt(&mut |stmt| {
+            fun.node.body.visit_stmt(&mut |stmt| {
                 match stmt.node {
                     ast::Statement::Declaration { ref var } |
                     ast::Statement::Assignment { ref var, .. } => check_var(var),

@@ -59,7 +59,7 @@ pub fn deduce(ctx: &Context, expr: &ast::Node<ast::Expression>) -> Result<ast::T
 
 pub fn check_function(ctx: &Context) -> Result<(), String> {
     // check all calls
-    ctx.current.node.body.walk_expr(&mut |e| {
+    ctx.current.node.body.visit_expr(&mut |e| {
         match e.node {
             ast::Expression::Call { .. } => check_call(ctx, e),
             _ => Ok(()),
