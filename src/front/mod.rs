@@ -11,6 +11,7 @@ pub mod symbols;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+use std::error::Error;
 
 use ::analysis::semantic as sema;
 use ::analysis::types as type_checker;
@@ -78,9 +79,10 @@ pub fn process_with_diag(filepaths: &[&Path],
     // check those types
     for (_, ref f) in &functions {
         try!(type_checker::check_function(&type_checker::Context {
-            current: f,
-            functions: &functions,
-        }));
+                current: f,
+                functions: &functions,
+            })
+            .map_err(|e| e.description().to_owned()));
     }
 
     // TODO additional semantic checks
