@@ -72,13 +72,13 @@ impl PartialEq for Variable {
     }
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone, Copy)]
 pub enum UnaryOp {
     NOT,
     MINUS,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone, Copy)]
 pub enum BinaryOp {
     ADD,
     SUB,
@@ -88,6 +88,12 @@ pub enum BinaryOp {
     EQ,
     LT,
     LE,
+}
+
+#[derive(PartialEq, Debug, Clone, Copy)]
+pub enum Op {
+    UnaryOp(UnaryOp),
+    BinaryOp(BinaryOp),
 }
 
 #[derive(PartialEq, Debug)]
