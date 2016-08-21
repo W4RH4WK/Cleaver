@@ -244,6 +244,93 @@ impl Node<Expression> {
     }
 }
 
+/// Enables visiting specific nodes in the AST.
+///
+/// Source: <https://github.com/darwins-challenge/moonlander-ast-rust>
+pub trait Visitor<'a> {
+    /// Continue visiting nodes?
+    fn cont(&self) -> bool {
+        true
+    }
+
+    /// Handler for Statements
+    fn visit_stmt(&mut self, &'a Node<Statement>) {}
+
+    /// Handler for Expressions
+    fn visit_expr(&mut self, &'a Node<Expression>) {}
+}
+
+/// Enables something to be visited by a [Visitor], intended for AST nodes.
+///
+/// [Visitor]: <trait.Visitor.html>
+pub trait Visitable<'a> {
+    fn visit(&'a self, visitor: &mut Visitor<'a>);
+}
+
+impl<'a> Visitable<'a> for Node<Function> {
+    fn visit(&'a self, visitor: &mut Visitor<'a>) {
+        self.node.body.visit(visitor);
+    }
+}
+
+impl<'a> Visitable<'a> for Node<Statement> {
+    fn visit(&'a self, visitor: &mut Visitor<'a>) {
+        if !visitor.cont() {
+            return;
+        }
+
+        visitor.visit_stmt(self);
+
+        match self.node {
+            Statement::Expression { ref expr } => expr.visit(visitor),
+            Statement::Assignment { ref expr, .. } => expr.visit(visitor),
+            Statement::If { ref cond, ref on_true, ref on_false } => {
+                cond.visit(visitor);
+                on_true.visit(visitor);
+                if let Some(ref stmt) = *on_false {
+                    stmt.visit(visitor);
+                }
+            }
+            Statement::While { ref cond, ref body } => {
+                cond.visit(visitor);
+                body.visit(visitor);
+            }
+            Statement::Return { expr: Some(ref expr) } => expr.visit(visitor),
+            Statement::Compound { ref stmts, .. } => {
+                for stmt in stmts {
+                    stmt.visit(visitor);
+                }
+            }
+            _ => (),
+        }
+    }
+}
+
+impl<'a> Visitable<'a> for Node<Expression> {
+    fn visit(&'a self, visitor: &mut Visitor<'a>) {
+        if !visitor.cont() {
+            return;
+        }
+
+        visitor.visit_expr(self);
+
+        match self.node {
+            Expression::Call { ref args, .. } => {
+                for arg in args {
+                    arg.visit(visitor);
+                }
+            }
+            Expression::Unary { ref expr, .. } => expr.visit(visitor),
+            Expression::Binary { ref left, ref right, .. } => {
+                left.visit(visitor);
+                right.visit(visitor);
+            }
+            Expression::Parenthesis { ref expr } => expr.visit(visitor),
+            _ => (),
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
