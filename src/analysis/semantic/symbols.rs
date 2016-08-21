@@ -1,48 +1,54 @@
+use std::marker::PhantomData;
 use std::rc::Rc;
 
 use ::front::ast;
+use ::front::ast::Visitable;
 
-pub fn check_void_variable(fun: &ast::Node<ast::Function>) -> Result<(), String> {
-    let mut res = Ok(());
-    let mut cont = true;
+struct VoidVariableChecker<'a> {
+    result: Result<(), String>,
+    phantom: PhantomData<&'a ()>,
+}
 
-    {
-        let mut check_var = |var: &Rc<ast::Variable>| {
-            if var.type_ == ast::Type::Void {
-                res = Err(format!("Variable `{}` must not be of type void", var.name));
-                false
-            } else {
-                true
-            }
-        };
-
-        // check arguments
-        for arg in &fun.node.args {
-            cont = check_var(arg);
-            if !cont {
-                break;
-            }
+impl<'a> VoidVariableChecker<'a> {
+    fn check_var(&mut self, var: &Rc<ast::Variable>) {
+        if var.type_ == ast::Type::Void {
+            self.result = Err(format!("Variable `{}` must not be of type void", var.name));
         }
+    }
+}
 
-        if cont {
-            cont = fun.node.body.visit_expr(&mut |expr| {
-                match expr.node {
-                    ast::Expression::Variable { ref var } => check_var(var),
-                    _ => true,
-                }
-            });
+impl<'a> Default for VoidVariableChecker<'a> {
+    fn default() -> VoidVariableChecker<'a> {
+        VoidVariableChecker {
+            result: Ok(()),
+            phantom: PhantomData,
         }
+    }
+}
 
-        if cont {
-            fun.node.body.visit_stmt(&mut |stmt| {
-                match stmt.node {
-                    ast::Statement::Declaration { ref var } |
-                    ast::Statement::Assignment { ref var, .. } => check_var(var),
-                    _ => true,
-                }
-            });
+impl<'a> ast::Visitor<'a> for VoidVariableChecker<'a> {
+    fn cont(&self) -> bool {
+        self.result.is_ok()
+    }
+
+    fn visit_stmt(&mut self, stmt: &'a ast::Node<ast::Statement>) {
+        match stmt.node {
+            ast::Statement::Declaration { ref var } |
+            ast::Statement::Assignment { ref var, .. } => self.check_var(var),
+            _ => (),
         }
     }
 
-    res
+    fn visit_expr(&mut self, expr: &'a ast::Node<ast::Expression>) {
+        match expr.node {
+            ast::Expression::Variable { ref var } => self.check_var(var),
+            _ => (),
+        }
+    }
+}
+
+pub fn check_void_variable(fun: &ast::Node<ast::Function>) -> Result<(), String> {
+    let mut checker = VoidVariableChecker::default();
+    fun.visit(&mut checker);
+    checker.result
 }
