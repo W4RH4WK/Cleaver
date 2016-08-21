@@ -142,7 +142,16 @@ pub enum Statement {
 }
 
 impl Node<Statement> {
-    pub fn visit_stmt(&self, do_stmt: &mut FnMut(&Node<Statement>) -> bool) -> bool {
+    /// Visit all statements with a given closure.
+    ///
+    /// The given closure is called for each statement with a reference to the
+    /// given node. This reference inherits the lifetime of `self`. The return
+    /// value indicates whether further statements should be visited or not.
+    ///
+    /// Use this method as alternative to the [Visitor].
+    ///
+    /// [Visitor]: <trait.Visitor.html>
+    pub fn visit_stmt<'a>(&'a self, do_stmt: &mut FnMut(&'a Node<Statement>) -> bool) -> bool {
         do_stmt(self) || return false;
         match self.node {
             Statement::If { ref on_true, ref on_false, .. } => {
@@ -164,7 +173,12 @@ impl Node<Statement> {
         }
     }
 
-    pub fn visit_expr(&self, do_expr: &mut FnMut(&Node<Expression>) -> bool) -> bool {
+    /// Visit all expressions with a given closure.
+    ///
+    /// Same as [visit_stmt], but for expressions.
+    ///
+    /// [visit_stmt]: <struct.Node.html#method.visit_expr>
+    pub fn visit_expr<'a>(&'a self, do_expr: &mut FnMut(&'a Node<Expression>) -> bool) -> bool {
         self.visit_stmt(&mut |stmt| {
             match stmt.node {
                 Statement::Expression { ref expr } => do_expr(expr),
@@ -205,7 +219,12 @@ pub enum Expression {
 }
 
 impl Node<Expression> {
-    pub fn visit_expr(&self, do_expr: &mut FnMut(&Node<Expression>) -> bool) -> bool {
+    /// Visit all expressions with a given closure.
+    ///
+    /// Same as [visit_stmt], but for expressions.
+    ///
+    /// [visit_stmt]: <struct.Node.html#method.visit_expr>
+    pub fn visit_expr<'a>(&'a self, do_expr: &mut FnMut(&'a Node<Expression>) -> bool) -> bool {
         do_expr(self) || return false;
         match self.node {
             Expression::Call { ref args, .. } => {
