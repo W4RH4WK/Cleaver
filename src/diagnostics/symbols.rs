@@ -1,6 +1,6 @@
 use std::iter::repeat;
 
-use ::diag::ast::printer::simple as simple_printer;
+use ::diagnostics::ast::printer::simple as simple_printer;
 use ::front::ast;
 
 pub fn print(fun: &ast::Node<ast::Function>) -> String {

@@ -1,6 +1,6 @@
 extern crate cleaver;
 use cleaver::front;
-use cleaver::diag;
+use cleaver::diagnostics as diag;
 
 extern crate clap;
 use clap::{App, Arg};

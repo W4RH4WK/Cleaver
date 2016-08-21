@@ -11,7 +11,7 @@ use pest::prelude::*;
 
 use ::front::{ast, Position};
 use ::front::symbols::SymbolTable;
-use ::diag;
+use ::diagnostics as diag;
 
 pub fn parse(input: &str) -> ast::Functions {
     let mut parser = Rdp::new(StringInput::new(input));

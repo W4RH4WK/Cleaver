@@ -15,7 +15,7 @@ use std::error::Error;
 
 use ::analysis::semantic as sema;
 use ::analysis::types as type_checker;
-use ::diag;
+use ::diagnostics as diag;
 
 pub fn process(filepaths: &[&Path]) -> Result<ast::Functions, String> {
     process_with_diag(filepaths, &None)
