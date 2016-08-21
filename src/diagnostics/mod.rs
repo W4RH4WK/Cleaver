@@ -17,7 +17,7 @@ impl Config {
         let output_dir = PathBuf::from(output_dir);
 
         // create output directory
-        DirBuilder::new().create(output_dir.as_path());
+        DirBuilder::new().create(output_dir.as_path()).expect("Diagnostics Directory");
 
         Config {
             output_dir: PathBuf::from(output_dir),
@@ -43,11 +43,13 @@ pub mod dot {
     use std::path::Path;
     use std::process::Command;
 
+    /// Try to run the `dot` command, fails silently.
     pub fn run(filepath: &Path) {
         Command::new("dot")
             .arg("-Tpng")
             .arg("-O")
             .arg(filepath.to_str().unwrap())
-            .spawn();
+            .spawn()
+            .ok();
     }
 }
