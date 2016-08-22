@@ -9,6 +9,7 @@ extern crate time;
 use time::PreciseTime;
 
 use std::path::Path;
+use std::process::exit;
 
 fn main() {
     // commandline arguments
@@ -39,9 +40,14 @@ fn main() {
 
     // run frontend
     let start = PreciseTime::now();
-    let functions = front::process_with_diag(&inputs, &config).expect("Frontend");
+    let functions = front::process_with_diag(&inputs, &config);
     let end = PreciseTime::now();
     if arguments.is_present("timings") {
         println!("Frontend time: {}", start.to(end));
     }
+
+    let functions = functions.unwrap_or_else(|err| {
+        println!("{}", err);
+        exit(-1);
+    });
 }
