@@ -11,6 +11,7 @@ clap = "2"
 clippy = { version = "*", optional = true }
 pest = "0.3.2"
 rand = "*"
+time = "*"
 
 [features]
 default = []

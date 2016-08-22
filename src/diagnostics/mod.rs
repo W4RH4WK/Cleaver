@@ -6,7 +6,6 @@ use std::path::PathBuf;
 
 pub struct Config {
     output_dir: PathBuf,
-    pub print_timings: bool,
     pub dump_tokens: bool,
     pub dump_ast: bool,
     pub dump_symbol_table: bool,
@@ -21,7 +20,6 @@ impl Config {
 
         Config {
             output_dir: PathBuf::from(output_dir),
-            print_timings: true,
             dump_tokens: true,
             dump_ast: true,
             dump_symbol_table: true,

@@ -78,11 +78,11 @@ pub fn process_with_diag(filepaths: &[&Path],
 
     // check those types
     for (_, ref f) in &functions {
-        try!(type_checker::check_function(&type_checker::Context {
+        type_checker::check_function(&type_checker::Context {
                 current: f,
                 functions: &functions,
             })
-            .map_err(|e| e.description().to_owned()));
+            .expect("type_checker");
     }
 
     // TODO additional semantic checks
