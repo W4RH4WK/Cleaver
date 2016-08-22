@@ -43,10 +43,10 @@ pub mod simple {
 
     pub fn literal(lit: &ast::Literal) -> String {
         match *lit {
-            ast::Literal::Bool(ref v) => format!("{}", v).to_owned(),
-            ast::Literal::Int(ref v) => format!("{}", v).to_owned(),
-            ast::Literal::Float(ref v) => format!("{}f", v).to_owned(),
-            ast::Literal::Str(ref v) => format!("\"{}\"", v).to_owned(),
+            ast::Literal::Bool(ref v) => v.to_string(),
+            ast::Literal::Int(ref v) => v.to_string(),
+            ast::Literal::Float(ref v) => format!("{}f", v),
+            ast::Literal::Str(ref v) => format!("\"{}\"", v),
         }
     }
 
