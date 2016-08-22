@@ -55,7 +55,7 @@ pub fn deduce<'a>(ctx: &Context, expr: &'a ast::Node<ast::Expression>) -> Result
 
                 // `<`, `<=` supported for numbers
                 ast::BinaryOp::LT | ast::BinaryOp::LE if [ast::Type::Int, ast::Type::Float]
-                    .contains(&t) => Ok(t),
+                    .contains(&t) => Ok(ast::Type::Bool),
 
                 // `==` supported for bool and numbers
                 ast::BinaryOp::EQ if [ast::Type::Bool, ast::Type::Int, ast::Type::Float]
