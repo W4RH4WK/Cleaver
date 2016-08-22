@@ -3,6 +3,7 @@ use std::fmt;
 use std::result;
 
 use ::front::ast;
+use ::front::FrontendError;
 
 pub type Result<'a> = result::Result<(), CallsUnknownFunction<'a>>;
 
@@ -14,7 +15,10 @@ pub fn check_target<'a>(functions: &'a ast::Functions,
     fun.node.body.visit_expr(&mut |expr| {
         match expr.node {
             ast::Expression::Call { ref function, .. } if !functions.contains_key(function) => {
-                res = Err(CallsUnknownFunction { call: expr });
+                res = Err(CallsUnknownFunction {
+                    call: expr,
+                    filename: fun.node.filename.clone(),
+                });
                 false
             }
             _ => true,
@@ -26,18 +30,15 @@ pub fn check_target<'a>(functions: &'a ast::Functions,
 
 #[derive(PartialEq, Debug)]
 pub struct CallsUnknownFunction<'a> {
-    call: &'a ast::Node<ast::Expression>,
+    pub call: &'a ast::Node<ast::Expression>,
+    pub filename: String,
 }
 
 impl<'a> fmt::Display for CallsUnknownFunction<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.call.node {
             ast::Expression::Call { ref function, .. } => {
-                write!(f,
-                       "{}.{} CallsUnknownFunction: `{}`",
-                       self.call.pos.line,
-                       self.call.pos.col,
-                       function)
+                write!(f, "CallsUnknownFunction: `{}`", function)
             }
             _ => panic!("expression not an Expression::Call"),
         }
@@ -47,5 +48,15 @@ impl<'a> fmt::Display for CallsUnknownFunction<'a> {
 impl<'a> Error for CallsUnknownFunction<'a> {
     fn description(&self) -> &str {
         "call to unknown function"
+    }
+}
+
+impl<'a> From<CallsUnknownFunction<'a>> for FrontendError {
+    fn from(err: CallsUnknownFunction<'a>) -> FrontendError {
+        FrontendError {
+            pos: err.call.pos,
+            filename: err.filename.clone(),
+            msg: err.to_string(),
+        }
     }
 }

@@ -4,6 +4,7 @@ use std::result;
 
 // TODO use ::diag;
 use ::front::ast;
+use ::front::FrontendError;
 
 pub type Result<'a, T> = result::Result<T, TypeError<'a>>;
 
@@ -38,6 +39,7 @@ pub fn deduce<'a>(ctx: &Context, expr: &'a ast::Node<ast::Expression>) -> Result
                         expr: expr,
                         op: ast::Op::UnaryOp(*op),
                         type_: e,
+                        filename: ctx.current.node.filename.clone(),
                     })
                 }
             }
@@ -66,6 +68,7 @@ pub fn deduce<'a>(ctx: &Context, expr: &'a ast::Node<ast::Expression>) -> Result
                         expr: expr,
                         op: ast::Op::BinaryOp(*op),
                         type_: t,
+                        filename: ctx.current.node.filename.clone(),
                     })
                 }
             }
@@ -85,6 +88,7 @@ pub fn expect<'a>(ctx: &Context,
             expr: expr,
             expected: expected,
             actual: deduced,
+            filename: ctx.current.node.filename.clone(),
         })
     } else {
         Ok(())
@@ -103,7 +107,10 @@ pub fn check_statement<'a>(ctx: &Context, stmt: &'a ast::Node<ast::Statement>) -
             if let Some(ref expr) = *expr {
                 expect(ctx, expr, ctx.current.node.ret_type)
             } else if ctx.current.node.ret_type != ast::Type::Void {
-                Err(TypeError::InvalidReturnValue { stmt: stmt })
+                Err(TypeError::InvalidReturnValue {
+                    stmt: stmt,
+                    filename: ctx.current.node.filename.clone(),
+                })
             } else {
                 Ok(())
             }
@@ -145,6 +152,7 @@ pub fn check_call<'a>(ctx: &Context, expr: &'a ast::Node<ast::Expression>) -> Re
                     call: expr,
                     expected: target.args.len(),
                     actual: args.len(),
+                    filename: ctx.current.node.filename.clone(),
                 });
             }
 
@@ -166,54 +174,46 @@ pub enum TypeError<'a> {
         expr: &'a ast::Node<ast::Expression>,
         expected: ast::Type,
         actual: ast::Type,
+        filename: String,
     },
     WrongArgumentCount {
         call: &'a ast::Node<ast::Expression>,
         expected: usize,
         actual: usize,
+        filename: String,
     },
     UnsupportedOperator {
         expr: &'a ast::Node<ast::Expression>,
         op: ast::Op,
         type_: ast::Type,
+        filename: String,
     },
     InvalidReturnValue {
         stmt: &'a ast::Node<ast::Statement>,
+        filename: String,
     },
 }
 
 impl<'a> fmt::Display for TypeError<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            TypeError::TypeMismatch { ref expr, ref expected, ref actual } => {
+            TypeError::TypeMismatch { ref expected, ref actual, .. } => {
                 write!(f,
-                       "{}.{} TypeMismatch: expected `{:?}` got `{:?}`",
-                       expr.pos.line,
-                       expr.pos.col,
+                       "TypeMismatch: expected `{:?}` got `{:?}`",
                        expected,
                        actual)
             }
-            TypeError::WrongArgumentCount { ref call, ref expected, ref actual } => {
+            TypeError::WrongArgumentCount { ref expected, ref actual, .. } => {
                 write!(f,
-                       "{}.{} WrongArgumentCount: expected `{}` got `{}`",
-                       call.pos.line,
-                       call.pos.col,
+                       "WrongArgumentCount: expected `{}` got `{}`",
                        expected,
                        actual)
             }
-            TypeError::UnsupportedOperator { ref expr, ref op, ref type_ } => {
-                write!(f,
-                       "{}.{} UnsupportedOperator: `{:?}` for `{:?}`",
-                       expr.pos.line,
-                       expr.pos.col,
-                       op,
-                       type_)
+            TypeError::UnsupportedOperator { ref op, ref type_, .. } => {
+                write!(f, "UnsupportedOperator: `{:?}` for `{:?}`", op, type_)
             }
-            TypeError::InvalidReturnValue { ref stmt } => {
-                write!(f,
-                       "{}.{} InvalidReturnValue: Return value given in void function",
-                       stmt.pos.line,
-                       stmt.pos.col)
+            TypeError::InvalidReturnValue { .. } => {
+                write!(f, "InvalidReturnValue: Return value given in void function")
             }
         }
     }
@@ -226,6 +226,22 @@ impl<'a> Error for TypeError<'a> {
             TypeError::WrongArgumentCount { .. } => "number of arguments does not match",
             TypeError::UnsupportedOperator { .. } => "operator cannot be used with given type",
             TypeError::InvalidReturnValue { .. } => "return value given in void function",
+        }
+    }
+}
+
+impl<'a> From<TypeError<'a>> for FrontendError {
+    fn from(err: TypeError) -> FrontendError {
+        let (pos, filename) = match err {
+            TypeError::TypeMismatch { ref expr, ref filename, .. } |
+            TypeError::UnsupportedOperator { ref expr, ref filename, .. } => (expr.pos, filename),
+            TypeError::WrongArgumentCount { ref call, ref filename, .. } => (call.pos, filename),
+            TypeError::InvalidReturnValue { ref stmt, ref filename, .. } => (stmt.pos, filename),
+        };
+        FrontendError {
+            pos: pos,
+            filename: filename.clone(),
+            msg: err.to_string(),
         }
     }
 }

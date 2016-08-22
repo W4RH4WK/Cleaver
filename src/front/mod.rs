@@ -8,22 +8,26 @@ pub mod ast;
 pub mod pest;
 pub mod symbols;
 
+use std::error::Error;
+use std::fmt;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
-use std::error::Error;
+use std::result;
 
 use ::analysis::semantic as sema;
 use ::analysis::types as type_checker;
 use ::diagnostics as diag;
 
-pub fn process(filepaths: &[&Path]) -> Result<ast::Functions, String> {
+pub type Result<T> = result::Result<T, FrontendError>;
+
+pub fn process(filepaths: &[&Path]) -> Result<ast::Functions> {
     process_with_diag(filepaths, &None)
 }
 
 pub fn process_with_diag(filepaths: &[&Path],
                          config: &Option<diag::Config>)
-                         -> Result<ast::Functions, String> {
+                         -> Result<ast::Functions> {
     // run parser
     let mut functions = pest::parse_files(filepaths, config);
 
@@ -68,21 +72,20 @@ pub fn process_with_diag(filepaths: &[&Path],
 
     // all variables must be non-void
     for (_, ref f) in &functions {
-        try!(sema::symbols::check_void_variable(f));
+        try!(sema::symbols::check_void_variable(f))
     }
 
     // check call expression targets
     for (_, ref f) in &functions {
-        sema::calls::check_target(&functions, f);
+        try!(sema::calls::check_target(&functions, f));
     }
 
     // check those types
     for (_, ref f) in &functions {
-        type_checker::check_function(&type_checker::Context {
-                current: f,
-                functions: &functions,
-            })
-            .expect("type_checker");
+        try!(type_checker::check_function(&type_checker::Context {
+            current: f,
+            functions: &functions,
+        }));
     }
 
     // TODO additional semantic checks
@@ -113,6 +116,41 @@ impl From<(usize, usize)> for Position {
         Position {
             line: line,
             col: col,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct FrontendError {
+    pub pos: Position,
+    pub filename: String,
+    pub msg: String,
+}
+
+impl fmt::Display for FrontendError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f,
+               "{} {}.{}: {}",
+               self.filename,
+               self.pos.line,
+               self.pos.col,
+               self.msg)
+    }
+}
+
+impl Error for FrontendError {
+    fn description(&self) -> &str {
+        "error occurred in frontend"
+    }
+}
+
+// TODO remove after all components have decent errors
+impl From<String> for FrontendError {
+    fn from(s: String) -> FrontendError {
+        FrontendError {
+            pos: Position::default(),
+            filename: "/unknown/".to_owned(),
+            msg: s,
         }
     }
 }
