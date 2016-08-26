@@ -181,11 +181,11 @@ impl Node<Statement> {
     pub fn visit_expr<'a>(&'a self, do_expr: &mut FnMut(&'a Node<Expression>) -> bool) -> bool {
         self.visit_stmt(&mut |stmt| {
             match stmt.node {
-                Statement::Expression { ref expr } => do_expr(expr),
-                Statement::Assignment { ref expr, .. } => do_expr(expr),
-                Statement::If { ref cond, .. } => do_expr(cond),
-                Statement::While { ref cond, .. } => do_expr(cond),
+                Statement::Expression { ref expr } |
+                Statement::Assignment { ref expr, .. } |
                 Statement::Return { expr: Some(ref expr) } => do_expr(expr),
+                Statement::If { ref cond, .. } |
+                Statement::While { ref cond, .. } => do_expr(cond),
                 _ => true,
             }
         })
@@ -233,7 +233,7 @@ impl Node<Expression> {
                 }
                 true
             }
-            Expression::Unary { ref expr, .. } => expr.visit_expr(do_expr),
+            Expression::Unary { ref expr, .. } |
             Expression::Parenthesis { ref expr } => expr.visit_expr(do_expr),
             Expression::Binary { ref left, ref right, .. } => {
                 left.visit_expr(do_expr) || return false;
@@ -282,8 +282,9 @@ impl<'a> Visitable<'a> for Node<Statement> {
         visitor.visit_stmt(self);
 
         match self.node {
-            Statement::Expression { ref expr } => expr.visit(visitor),
-            Statement::Assignment { ref expr, .. } => expr.visit(visitor),
+            Statement::Expression { ref expr } |
+            Statement::Assignment { ref expr, .. } |
+            Statement::Return { expr: Some(ref expr) } => expr.visit(visitor),
             Statement::If { ref cond, ref on_true, ref on_false } => {
                 cond.visit(visitor);
                 on_true.visit(visitor);
@@ -295,7 +296,6 @@ impl<'a> Visitable<'a> for Node<Statement> {
                 cond.visit(visitor);
                 body.visit(visitor);
             }
-            Statement::Return { expr: Some(ref expr) } => expr.visit(visitor),
             Statement::Compound { ref stmts, .. } => {
                 for stmt in stmts {
                     stmt.visit(visitor);
@@ -320,11 +320,11 @@ impl<'a> Visitable<'a> for Node<Expression> {
                     arg.visit(visitor);
                 }
             }
-            Expression::Unary { ref expr, .. } => expr.visit(visitor),
             Expression::Binary { ref left, ref right, .. } => {
                 left.visit(visitor);
                 right.visit(visitor);
             }
+            Expression::Unary { ref expr, .. } |
             Expression::Parenthesis { ref expr } => expr.visit(visitor),
             _ => (),
         }

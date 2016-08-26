@@ -6,7 +6,7 @@ pub mod simple {
         let args = fun.node
             .args
             .iter()
-            .map(|ref arg| format!("{:?} {}", arg.type_, arg.name))
+            .map(|arg| format!("{:?} {}", arg.type_, arg.name))
             .collect::<Vec<String>>()
             .join(", ");
 
@@ -73,7 +73,8 @@ pub mod dot {
     fn statement(stmt: &ast::Node<ast::Statement>) -> String {
         let mut ret = node(stmt, &simple::statement(stmt));
         match stmt.node {
-            ast::Statement::Expression { ref expr } => {
+            ast::Statement::Expression { ref expr } |
+            ast::Statement::Return { expr: Some(ref expr) } => {
                 ret.push_str(&expression(expr));
                 ret.push_str(&edge(stmt, expr, "expr"));
             }
@@ -102,10 +103,6 @@ pub mod dot {
                 ret.push_str(&edge(stmt, cond, "cond"));
                 ret.push_str(&statement(body));
                 ret.push_str(&edge(stmt, body, "body"));
-            }
-            ast::Statement::Return { expr: Some(ref expr) } => {
-                ret.push_str(&expression(expr));
-                ret.push_str(&edge(stmt, expr, "expr"));
             }
             ast::Statement::Compound { ref stmts, .. } => {
                 for (i, s) in stmts.iter().enumerate() {

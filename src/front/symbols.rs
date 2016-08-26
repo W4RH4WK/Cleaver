@@ -136,13 +136,11 @@ fn symbolize_expression(symbols: Rc<RefCell<SymbolTable>>,
             }
             Ok(())
         }
-        ast::Expression::Unary { ref mut expr, .. } => {
-            symbolize_expression(symbols.clone(), expr, id_counter)
-        }
         ast::Expression::Binary { ref mut left, ref mut right, .. } => {
             try!(symbolize_expression(symbols.clone(), left, id_counter));
             symbolize_expression(symbols.clone(), right, id_counter)
         }
+        ast::Expression::Unary { ref mut expr, .. } |
         ast::Expression::Parenthesis { ref mut expr } => {
             symbolize_expression(symbols.clone(), expr, id_counter)
         }

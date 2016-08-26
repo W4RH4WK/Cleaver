@@ -15,8 +15,8 @@ static MOUTHS: &'static [&'static str] = include!("lenny_mouths.inc");
 
 /// Generate a new Lenny Face.
 pub fn gen() -> String {
-    let (ref l_ear, ref r_ear) = EARS[random::<usize>() % EARS.len()];
-    let (ref l_eye, ref r_eye) = EYES[random::<usize>() % EYES.len()];
+    let (l_ear, r_ear) = EARS[random::<usize>() % EARS.len()];
+    let (l_eye, r_eye) = EYES[random::<usize>() % EYES.len()];
     let mouth = &MOUTHS[random::<usize>() % MOUTHS.len()];
     format!("{}{}{}{}{}", l_ear, l_eye, mouth, r_eye, r_ear)
 }

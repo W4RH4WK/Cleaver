@@ -233,10 +233,10 @@ impl<'a> Error for TypeError<'a> {
 impl<'a> From<TypeError<'a>> for FrontendError {
     fn from(err: TypeError) -> FrontendError {
         let (pos, filename) = match err {
-            TypeError::TypeMismatch { ref expr, ref filename, .. } |
-            TypeError::UnsupportedOperator { ref expr, ref filename, .. } => (expr.pos, filename),
-            TypeError::WrongArgumentCount { ref call, ref filename, .. } => (call.pos, filename),
-            TypeError::InvalidReturnValue { ref stmt, ref filename, .. } => (stmt.pos, filename),
+            TypeError::TypeMismatch { expr, ref filename, .. } |
+            TypeError::UnsupportedOperator { expr, ref filename, .. } => (expr.pos, filename),
+            TypeError::WrongArgumentCount { call, ref filename, .. } => (call.pos, filename),
+            TypeError::InvalidReturnValue { stmt, ref filename, .. } => (stmt.pos, filename),
         };
         FrontendError {
             pos: pos,

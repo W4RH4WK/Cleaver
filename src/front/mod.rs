@@ -32,13 +32,13 @@ pub fn process_with_diag(filepaths: &[&Path],
     let mut functions = pest::parse_files(filepaths, config);
 
     // symbolize everything
-    for (_, ref mut f) in &mut functions {
+    for f in functions.values_mut() {
         try!(symbols::symbolize(f));
     }
 
     // write dot output for functions
     if config.as_ref().map_or(false, |c| c.dump_ast) {
-        for (ref name, ref f) in &functions {
+        for (name, f) in &functions {
             // filepath
             let filepath = config.as_ref()
                 .unwrap()
@@ -56,7 +56,7 @@ pub fn process_with_diag(filepaths: &[&Path],
 
     // write symbol table for functions
     if config.as_ref().map_or(false, |c| c.dump_symbol_table) {
-        for (ref name, ref f) in &functions {
+        for (name, f) in &functions {
             // filepath
             let filepath = config.as_ref()
                 .unwrap()
@@ -71,17 +71,17 @@ pub fn process_with_diag(filepaths: &[&Path],
     }
 
     // all variables must be non-void
-    for (_, ref f) in &functions {
+    for f in functions.values() {
         try!(sema::symbols::check_void_variable(f))
     }
 
     // check call expression targets
-    for (_, ref f) in &functions {
+    for f in functions.values() {
         try!(sema::calls::check_target(&functions, f));
     }
 
     // check those types
-    for (_, ref f) in &functions {
+    for f in functions.values() {
         try!(type_checker::check_function(&type_checker::Context {
             current: f,
             functions: &functions,

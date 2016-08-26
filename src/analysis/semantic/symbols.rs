@@ -40,9 +40,8 @@ impl<'a> ast::Visitor<'a> for VoidVariableChecker<'a> {
     }
 
     fn visit_expr(&mut self, expr: &'a ast::Node<ast::Expression>) {
-        match expr.node {
-            ast::Expression::Variable { ref var } => self.check_var(var),
-            _ => (),
+        if let ast::Expression::Variable { ref var } = expr.node {
+            self.check_var(var);
         }
     }
 }
