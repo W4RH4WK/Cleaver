@@ -1,4 +1,4 @@
-#![cfg_attr(feature = "clippy", allow(block_in_if_condition_stmt))]
+#![cfg_attr(feature="clippy", allow(block_in_if_condition_stmt))]
 
 use std::cell::RefCell;
 use std::collections::LinkedList;

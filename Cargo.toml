@@ -15,7 +15,6 @@ time = "*"
 
 [features]
 default = []
-dev = ['clippy']
 
 [[bin]]
 name = "cleaver"
