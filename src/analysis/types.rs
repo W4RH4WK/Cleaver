@@ -2,15 +2,16 @@ use std::error::Error;
 use std::fmt;
 use std::result;
 
-// TODO use ::diag;
+use ::diagnostics as diag;
 use ::front::ast;
 use ::front::FrontendError;
 
 pub type Result<'a, T> = result::Result<T, TypeError<'a>>;
 
-pub struct Context<'a> {
+pub struct Context<'a, 'b> {
     pub current: &'a ast::Node<ast::Function>,
     pub functions: &'a ast::Functions,
+    pub config: &'b Option<diag::Config>,
 }
 
 pub fn deduce<'a>(ctx: &Context, expr: &'a ast::Node<ast::Expression>) -> Result<'a, ast::Type> {
@@ -95,8 +96,22 @@ pub fn expect<'a>(ctx: &Context,
     }
 }
 
-pub fn check_function<'a>(ctx: &Context<'a>) -> Result<'a, ()> {
-    check_statement(ctx, &ctx.current.node.body)
+pub fn check_function<'a>(functions: &'a ast::Functions,
+                          function: &'a ast::Node<ast::Function>)
+                          -> Result<'a, ()> {
+    check_function_with_diag(functions, function, &None)
+}
+
+pub fn check_function_with_diag<'a>(functions: &'a ast::Functions,
+                                    function: &'a ast::Node<ast::Function>,
+                                    config: &Option<diag::Config>)
+                                    -> Result<'a, ()> {
+    let ctx = Context {
+        current: function,
+        functions: functions,
+        config: config,
+    };
+    check_statement(&ctx, &function.node.body)
 }
 
 pub fn check_statement<'a>(ctx: &Context, stmt: &'a ast::Node<ast::Statement>) -> Result<'a, ()> {

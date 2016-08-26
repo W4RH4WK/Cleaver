@@ -82,10 +82,7 @@ pub fn process_with_diag(filepaths: &[&Path],
 
     // check those types
     for f in functions.values() {
-        try!(type_checker::check_function(&type_checker::Context {
-            current: f,
-            functions: &functions,
-        }));
+        try!(type_checker::check_function_with_diag(&functions, f, config));
     }
 
     // TODO additional semantic checks
