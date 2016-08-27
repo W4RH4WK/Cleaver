@@ -22,8 +22,18 @@ pub fn gen() -> String {
 }
 
 /// (╯°□°）╯︵ ┻━┻
-pub fn fliptable() -> String {
-    "(╯°□°）╯︵ ┻━┻".to_owned()
+pub fn fliptable() -> &'static str {
+    "(╯°□°）╯︵ ┻━┻"
+}
+
+/// > The Overmind has come to destroy all that we hold dear and assimilate us into itself. And I
+/// > say to thee, this shall not come to pass! Aiur shall not fall! Executor, I stand ready!
+/// >
+/// > -- Tassadar
+pub fn pylons() -> &'static str {
+    r#" /\                                         /\
+{==} You Must Construct Additional Pylons! {==}
+ \/                                         \/"#
 }
 
 #[cfg(test)]
@@ -33,5 +43,10 @@ mod test {
     #[test]
     fn generate() {
         println!("{}", gen());
+    }
+
+    #[test]
+    fn polyons() {
+        println!("{}", pylons());
     }
 }
