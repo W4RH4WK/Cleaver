@@ -10,8 +10,7 @@ use ::diagnostics as diag;
 use super::ast;
 
 pub type Result<T> = result::Result<T, SymbolError>;
-
-type SymbolTable = HashMap<String, Rc<ast::Variable>>;
+pub type SymbolTable = HashMap<String, Rc<ast::Variable>>;
 
 #[derive(Debug)]
 pub struct Context {
