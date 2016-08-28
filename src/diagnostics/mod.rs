@@ -16,7 +16,10 @@ impl Config {
         let output_dir = PathBuf::from(output_dir);
 
         // create output directory
-        DirBuilder::new().create(output_dir.as_path()).expect("Diagnostics Directory");
+        DirBuilder::new()
+            .recursive(true)
+            .create(output_dir.as_path())
+            .expect("Diagnostics Directory");
 
         Config {
             output_dir: PathBuf::from(output_dir),
