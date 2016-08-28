@@ -57,6 +57,7 @@ impl<'a> From<CallsUnknownFunction<'a>> for FrontendError {
             pos: err.call.pos,
             filename: err.filename.clone(),
             msg: err.to_string(),
+            cause: None,
         }
     }
 }

@@ -12,6 +12,7 @@ use std::error::Error;
 use std::fmt;
 use std::fs::File;
 use std::io::Write;
+use std::ops::Deref;
 use std::path::Path;
 use std::result;
 
@@ -33,7 +34,7 @@ pub fn process_with_diag(filepaths: &[&Path],
 
     // symbolize everything
     for f in functions.values_mut() {
-        try!(symbols::symbolize(f));
+        try!(symbols::symbolize_with_diag(f, config));
     }
 
     // write dot output for functions
@@ -51,22 +52,6 @@ pub fn process_with_diag(filepaths: &[&Path],
 
             // call dot
             diag::dot::run(filepath.as_path());
-        }
-    }
-
-    // write symbol table for functions
-    if config.as_ref().map_or(false, |c| c.dump_symbol_table) {
-        for (name, f) in &functions {
-            // filepath
-            let filepath = config.as_ref()
-                .unwrap()
-                .output_dir()
-                .join(format!("symbols_{}_{}.txt", f.node.filename, name));
-
-            // dump
-            Write::write_all(&mut File::create(filepath.as_path()).unwrap(),
-                             diag::symbols::print(f).as_bytes());
-
         }
     }
 
@@ -122,6 +107,7 @@ pub struct FrontendError {
     pub pos: Position,
     pub filename: String,
     pub msg: String,
+    pub cause: Option<Box<Error>>,
 }
 
 impl fmt::Display for FrontendError {
@@ -139,6 +125,10 @@ impl Error for FrontendError {
     fn description(&self) -> &str {
         "error occurred in frontend"
     }
+
+    fn cause(&self) -> Option<&Error> {
+        self.cause.as_ref().map(Box::deref)
+    }
 }
 
 // TODO remove after all components have decent errors
@@ -148,6 +138,7 @@ impl From<String> for FrontendError {
             pos: Position::default(),
             filename: "/unknown/".to_owned(),
             msg: s,
+            cause: None,
         }
     }
 }

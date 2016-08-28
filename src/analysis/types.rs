@@ -257,6 +257,7 @@ impl<'a> From<TypeError<'a>> for FrontendError {
             pos: pos,
             filename: filename.clone(),
             msg: err.to_string(),
+            cause: None,
         }
     }
 }

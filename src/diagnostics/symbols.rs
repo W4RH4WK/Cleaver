@@ -1,50 +1,63 @@
 use std::iter::repeat;
+use std::fs::File;
+use std::io::Write;
+use std::rc::Rc;
 
 use ::diagnostics::ast::printer::simple as simple_printer;
 use ::front::ast;
 
-pub fn print(fun: &ast::Node<ast::Function>) -> String {
-    let mut dump = simple_printer::function(fun);
-    dump.push_str("\n");
+use super::Config;
 
-    // add arguments
-    for var in fun.node.symbols.borrow().iter() {
-        dump.push_str(&format!("\t - {}\n", simple_printer::variable(&*var)));
-    }
-
-    statement(&mut dump, &fun.node.body, 1);
-
-    dump
+#[derive(Debug)]
+pub struct Log {
+    pub out: File,
+    pub indent: usize,
 }
 
-fn statement(dump: &mut String, stmt: &ast::Node<ast::Statement>, depth: usize) {
-    let indent: String = repeat("\t").take(depth).collect();
-    match stmt.node {
-        ast::Statement::Compound { ref stmts, ref symbols } => {
-            dump.push_str(&format!("{}{}:{}\n",
-                                   indent,
-                                   simple_printer::statement(stmt),
-                                   stmt.pos.line));
+impl Log {
+    pub fn new(function: &ast::Node<ast::Function>, config: &Option<Config>) -> Log {
+        let filepath = config.as_ref()
+            .unwrap()
+            .output_dir()
+            .join(format!("scopes_{}_{}.txt",
+                          function.node.filename,
+                          function.node.name));
+        Log {
+            out: File::create(filepath).expect("Scopes"),
+            indent: 0,
+        }
+    }
 
-            // add symbols
-            for var in symbols.borrow().iter() {
-                dump.push_str(&format!("{} - {}\n", indent, simple_printer::variable(&*var)));
-            }
+    pub fn log(&mut self, data: &str) {
+        self.out.write_all(data.as_bytes()).expect("Scopes log");
+    }
 
-            // recursion
-            for stmt in stmts {
-                statement(dump, stmt, depth + 1);
-            }
-        }
-        ast::Statement::If { ref on_true, ref on_false, .. } => {
-            statement(dump, on_true, depth);
-            if let Some(ref stmt) = *on_false {
-                statement(dump, stmt, depth);
-            }
-        }
-        ast::Statement::While { ref body, .. } => {
-            statement(dump, body, depth);
-        }
-        _ => (),
+    fn indent(&mut self) {
+        let indent: String = repeat("\t").take(self.indent).collect();
+        self.log(&indent);
+    }
+
+    pub fn function(&mut self, function: &ast::Node<ast::Function>) {
+        self.log(&simple_printer::function(function));
+        self.log("\n{\n");
+        self.indent += 1;
+    }
+
+    pub fn insert(&mut self, var: &Rc<ast::Variable>) {
+        self.indent();
+        self.log(&simple_printer::variable(var));
+        self.log("\n");
+    }
+
+    pub fn scope_open(&mut self, stmt: &ast::Node<ast::Statement>) {
+        self.indent();
+        self.log(&format!("{}:{} {{\n", simple_printer::statement(stmt), stmt.pos.line));
+        self.indent += 1;
+    }
+
+    pub fn scope_close(&mut self) {
+        self.indent -= 1;
+        self.indent();
+        self.log("}\n");
     }
 }

@@ -1,6 +1,5 @@
 #![cfg_attr(feature="clippy", allow(block_in_if_condition_stmt))]
 
-use std::cell::RefCell;
 use std::collections::LinkedList;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -10,7 +9,6 @@ use std::rc::Rc;
 use pest::prelude::*;
 
 use ::front::{ast, Position};
-use ::front::symbols::SymbolTable;
 use ::diagnostics as diag;
 
 pub fn parse(input: &str) -> ast::Functions {
@@ -400,7 +398,6 @@ impl_rdp! {
                     pos: Position::from(self.input().line_col(pos.start)),
                     node: ast::Statement::Compound {
                         stmts: stmts.into_iter().collect(),
-                        symbols: Rc::new(RefCell::new(SymbolTable::default())),
                     }
                 }
             },
@@ -428,8 +425,7 @@ impl_rdp! {
                         filename: "".to_owned(),
                         body: body,
                         args: args.into_iter().collect(),
-                        ret_type: ret_type,
-                        symbols: Rc::new(RefCell::new(SymbolTable::default())),
+                        ret_type: ret_type
                     }
                 }
             }
@@ -499,8 +495,7 @@ mod test {
         let mut parser = Rdp::new(StringInput::new("int foo(int bar, float baz) return bar;"));
         parser.function();
 
-        let ast::Function { name, filename: _, body, args, ret_type, symbols: _ } =
-            parser.parse_function().node;
+        let ast::Function { name, body, args, ret_type, .. } = parser.parse_function().node;
 
         assert_eq!("foo", name);
         assert_eq!(ast::Type::Int, ret_type);
@@ -863,7 +858,7 @@ mod test {
             let mut parser = Rdp::new(StringInput::new("{2;}"));
             parser.statement();
             match parser.parse_statement().node {
-                ast::Statement::Compound { stmts, symbols: _ } => {
+                ast::Statement::Compound { stmts } => {
                     assert_eq!(1, stmts.len());
                     match stmts[0].node {
                         ast::Statement::Expression { ref expr } => {

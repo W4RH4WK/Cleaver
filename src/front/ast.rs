@@ -1,9 +1,7 @@
-use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
 use super::Position;
-use super::symbols::SymbolTable;
 
 pub type Functions = HashMap<String, Node<Function>>;
 
@@ -108,7 +106,6 @@ pub struct Function {
     pub body: Node<Statement>,
     pub args: Vec<Rc<Variable>>,
     pub ret_type: Type,
-    pub symbols: Rc<RefCell<SymbolTable>>,
 }
 
 #[derive(PartialEq, Debug)]
@@ -137,7 +134,6 @@ pub enum Statement {
     },
     Compound {
         stmts: Vec<Node<Statement>>,
-        symbols: Rc<RefCell<SymbolTable>>,
     },
 }
 
