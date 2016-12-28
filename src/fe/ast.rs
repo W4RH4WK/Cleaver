@@ -320,7 +320,7 @@ mod test {
     #[test]
     fn literals() {
         assert_eq!(Type::Bool, Literal::Bool(false).get_type());
-        assert_eq!(Type::Bool, Literal::Int(0).get_type());
+        assert_eq!(Type::Int, Literal::Int(0).get_type());
         assert_eq!(Type::Float, Literal::Float(0.0).get_type());
     }
 }

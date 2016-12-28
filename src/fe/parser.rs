@@ -461,7 +461,7 @@ impl_rdp! {
 mod test {
     pub use super::*;
     pub use pest::prelude::*;
-    pub use ::frontend::ast;
+    pub use super::super::ast;
 
     #[test]
     fn variables() {
