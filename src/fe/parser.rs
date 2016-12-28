@@ -8,8 +8,9 @@ use std::rc::Rc;
 
 use pest::prelude::*;
 
-use ::front::{ast, Position};
-use ::diagnostics as diag;
+use ::diag;
+use super::ast;
+use super::Position;
 
 pub fn parse(input: &str) -> ast::Functions {
     let mut parser = Rdp::new(StringInput::new(input));
@@ -460,7 +461,7 @@ impl_rdp! {
 mod test {
     pub use super::*;
     pub use pest::prelude::*;
-    pub use ::front::ast;
+    pub use ::frontend::ast;
 
     #[test]
     fn variables() {

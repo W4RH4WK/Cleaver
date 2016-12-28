@@ -1,5 +1,5 @@
 pub mod simple {
-    use ::front::ast;
+    use ::fe::ast;
 
     pub fn function(fun: &ast::Node<ast::Function>) -> String {
         // arguments
@@ -56,7 +56,8 @@ pub mod simple {
 }
 
 pub mod dot {
-    use ::front::ast;
+    use ::fe::ast;
+
     use super::simple;
 
     pub fn function(fun: &ast::Node<ast::Function>) -> String {

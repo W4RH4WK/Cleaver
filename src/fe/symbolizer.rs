@@ -4,10 +4,9 @@ use std::fmt;
 use std::rc::Rc;
 use std::result;
 
-use ::front::Position;
-use ::front::FrontendError;
-use ::diagnostics as diag;
+use ::diag;
 use super::ast;
+use super::Position;
 
 pub type Result<T> = result::Result<T, SymbolError>;
 pub type SymbolTable = HashMap<String, Rc<ast::Variable>>;
@@ -224,6 +223,7 @@ impl Error for SymbolError {
     }
 }
 
+/* TODO
 impl From<SymbolError> for FrontendError {
     fn from(err: SymbolError) -> FrontendError {
         let (pos, filename) = match err {
@@ -238,3 +238,4 @@ impl From<SymbolError> for FrontendError {
         }
     }
 }
+*/

@@ -3,8 +3,8 @@ use std::fs::File;
 use std::io::Write;
 use std::rc::Rc;
 
-use ::diagnostics::ast::printer::simple as simple_printer;
-use ::front::ast;
+use super::ast::printer::simple as simple_printer;
+use ::fe::ast;
 
 use super::Config;
 

@@ -1,8 +1,8 @@
 use std::marker::PhantomData;
 use std::rc::Rc;
 
-use ::front::ast;
-use ::front::ast::Visitable;
+use ::fe::ast;
+use ::fe::ast::Visitable;
 
 struct VoidVariableChecker<'a> {
     result: Result<(), String>,
@@ -51,3 +51,5 @@ pub fn check_void_variable(fun: &ast::Node<ast::Function>) -> Result<(), String>
     fun.visit(&mut checker);
     checker.result
 }
+
+// TODO check error

@@ -1,3 +1,5 @@
 /diag
 /target
 Cargo.lock
+
+.vscode

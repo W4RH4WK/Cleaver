@@ -1,6 +1,6 @@
 extern crate cleaver;
-use cleaver::front;
-use cleaver::diagnostics as diag;
+use cleaver::fe;
+use cleaver::diag;
 
 extern crate clap;
 use clap::{App, Arg};
@@ -40,14 +40,12 @@ fn main() {
 
     // run frontend
     let start = PreciseTime::now();
-    let functions = front::process_with_diag(&inputs, &config);
+    let functions = fe::parse_with_diag(&inputs, &config).unwrap();
+    fe::check_with_diag(&functions, &config).unwrap();
     let end = PreciseTime::now();
     if arguments.is_present("timings") {
         println!("Frontend time: {}", start.to(end));
     }
 
-    let functions = functions.unwrap_or_else(|err| {
-        println!("{}", err);
-        exit(-1);
-    });
+    // TODO error hanlding
 }

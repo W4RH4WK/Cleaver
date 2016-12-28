@@ -2,8 +2,9 @@ use std::error::Error;
 use std::fmt;
 use std::result;
 
-use ::front::ast;
-use ::front::FrontendError;
+use ::fe::ast;
+use ::fe::error::CheckError;
+use ::fe::Position;
 
 pub type Result<'a> = result::Result<(), CallsUnknownFunction<'a>>;
 
@@ -51,13 +52,8 @@ impl<'a> Error for CallsUnknownFunction<'a> {
     }
 }
 
-impl<'a> From<CallsUnknownFunction<'a>> for FrontendError {
-    fn from(err: CallsUnknownFunction<'a>) -> FrontendError {
-        FrontendError {
-            pos: err.call.pos,
-            filename: err.filename.clone(),
-            msg: err.to_string(),
-            cause: None,
-        }
+impl<'a> From<CallsUnknownFunction<'a>> for CheckError<'a> {
+    fn from(err: CallsUnknownFunction<'a>) -> CheckError<'a> {
+        CheckError::Call(err)
     }
 }

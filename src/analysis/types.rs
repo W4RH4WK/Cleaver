@@ -2,9 +2,9 @@ use std::error::Error;
 use std::fmt;
 use std::result;
 
-use ::diagnostics as diag;
-use ::front::ast;
-use ::front::FrontendError;
+use ::diag;
+use ::fe::ast;
+use ::fe::error::CheckError;
 
 pub type Result<'a, T> = result::Result<T, TypeError<'a>>;
 
@@ -245,19 +245,8 @@ impl<'a> Error for TypeError<'a> {
     }
 }
 
-impl<'a> From<TypeError<'a>> for FrontendError {
-    fn from(err: TypeError) -> FrontendError {
-        let (pos, filename) = match err {
-            TypeError::TypeMismatch { expr, ref filename, .. } |
-            TypeError::UnsupportedOperator { expr, ref filename, .. } => (expr.pos, filename),
-            TypeError::WrongArgumentCount { call, ref filename, .. } => (call.pos, filename),
-            TypeError::InvalidReturnValue { stmt, ref filename, .. } => (stmt.pos, filename),
-        };
-        FrontendError {
-            pos: pos,
-            filename: filename.clone(),
-            msg: err.to_string(),
-            cause: None,
-        }
+impl<'a> From<TypeError<'a>> for CheckError<'a> {
+    fn from(err: TypeError<'a>) -> CheckError<'a> {
+        CheckError::Type(err)
     }
 }

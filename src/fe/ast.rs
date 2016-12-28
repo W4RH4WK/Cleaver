@@ -110,12 +110,8 @@ pub struct Function {
 
 #[derive(PartialEq, Debug)]
 pub enum Statement {
-    Expression {
-        expr: Box<Node<Expression>>,
-    },
-    Declaration {
-        var: Rc<Variable>,
-    },
+    Expression { expr: Box<Node<Expression>> },
+    Declaration { var: Rc<Variable> },
     Assignment {
         var: Rc<Variable>,
         expr: Box<Node<Expression>>,
@@ -129,12 +125,8 @@ pub enum Statement {
         cond: Box<Node<Expression>>,
         body: Box<Node<Statement>>,
     },
-    Return {
-        expr: Option<Box<Node<Expression>>>,
-    },
-    Compound {
-        stmts: Vec<Node<Statement>>,
-    },
+    Return { expr: Option<Box<Node<Expression>>> },
+    Compound { stmts: Vec<Node<Statement>> },
 }
 
 impl Node<Statement> {
@@ -190,12 +182,8 @@ impl Node<Statement> {
 
 #[derive(PartialEq, Debug)]
 pub enum Expression {
-    Literal {
-        lit: Literal,
-    },
-    Variable {
-        var: Rc<Variable>,
-    },
+    Literal { lit: Literal },
+    Variable { var: Rc<Variable> },
     Call {
         function: String,
         args: Vec<Node<Expression>>,
@@ -209,9 +197,7 @@ pub enum Expression {
         left: Box<Node<Expression>>,
         right: Box<Node<Expression>>,
     },
-    Parenthesis {
-        expr: Box<Node<Expression>>,
-    },
+    Parenthesis { expr: Box<Node<Expression>> },
 }
 
 impl Node<Expression> {
@@ -334,7 +320,7 @@ mod test {
     #[test]
     fn literals() {
         assert_eq!(Type::Bool, Literal::Bool(false).get_type());
-        assert_eq!(Type::Int, Literal::Int(0).get_type());
+        assert_eq!(Type::Bool, Literal::Int(0).get_type());
         assert_eq!(Type::Float, Literal::Float(0.0).get_type());
     }
 }
