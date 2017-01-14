@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["fliptable","(╯°□°）╯︵ ┻━┻"],["gen","Generate a new Lenny Face."],["pylons","The Overmind has come to destroy all that we hold dear and assimilate us into itself. And I > say to thee, this shall not come to pass! Aiur shall not fall! Executor, I stand ready! > > -- Tassadar"]]});

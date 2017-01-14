@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Rdp` struct in crate `cleaver`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Rdp">
+
+    <title>cleaver::fe::parser::Rdp - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>cleaver</a>::<wbr><a href='../index.html'>fe</a>::<wbr><a href='index.html'>parser</a></p><script>window.sidebarCurrent = {name: 'Rdp', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>cleaver</a>::<wbr><a href='../index.html'>fe</a>::<wbr><a href='index.html'>parser</a>::<wbr><a class='struct' href=''>Rdp</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
+<pre class='rust struct'>pub struct Rdp&lt;T&gt; { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input, T:&nbsp;<a class='trait' href='../../../pest/input/trait.Input.html' title='pest::input::Input'>Input</a>&lt;'input&gt;&gt; <a class='struct' href='../../../cleaver/fe/parser/struct.Rdp.html' title='cleaver::fe::parser::Rdp'>Rdp</a>&lt;T&gt;</code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(input: T) -&gt; <a class='struct' href='../../../cleaver/fe/parser/struct.Rdp.html' title='cleaver::fe::parser::Rdp'>Rdp</a>&lt;T&gt;</code></span></h4>
+<h4 id='method.comment' class='method'><span id='comment.v' class='invisible'><code>fn <a href='#method.comment' class='fnname'>comment</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.any' class='method'><span id='any.v' class='invisible'><code>fn <a href='#method.any' class='fnname'>any</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.eoi' class='method'><span id='eoi.v' class='invisible'><code>fn <a href='#method.eoi' class='fnname'>eoi</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.alpha' class='method'><span id='alpha.v' class='invisible'><code>fn <a href='#method.alpha' class='fnname'>alpha</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.alpha_num' class='method'><span id='alpha_num.v' class='invisible'><code>fn <a href='#method.alpha_num' class='fnname'>alpha_num</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.identifier' class='method'><span id='identifier.v' class='invisible'><code>fn <a href='#method.identifier' class='fnname'>identifier</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.bool_literal' class='method'><span id='bool_literal.v' class='invisible'><code>fn <a href='#method.bool_literal' class='fnname'>bool_literal</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.bool_literal_true' class='method'><span id='bool_literal_true.v' class='invisible'><code>fn <a href='#method.bool_literal_true' class='fnname'>bool_literal_true</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.bool_literal_false' class='method'><span id='bool_literal_false.v' class='invisible'><code>fn <a href='#method.bool_literal_false' class='fnname'>bool_literal_false</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.int_literal' class='method'><span id='int_literal.v' class='invisible'><code>fn <a href='#method.int_literal' class='fnname'>int_literal</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.float_literal' class='method'><span id='float_literal.v' class='invisible'><code>fn <a href='#method.float_literal' class='fnname'>float_literal</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.string_literal' class='method'><span id='string_literal.v' class='invisible'><code>fn <a href='#method.string_literal' class='fnname'>string_literal</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.type_' class='method'><span id='type_.v' class='invisible'><code>fn <a href='#method.type_' class='fnname'>type_</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.type_void' class='method'><span id='type_void.v' class='invisible'><code>fn <a href='#method.type_void' class='fnname'>type_void</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.type_bool' class='method'><span id='type_bool.v' class='invisible'><code>fn <a href='#method.type_bool' class='fnname'>type_bool</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.type_int' class='method'><span id='type_int.v' class='invisible'><code>fn <a href='#method.type_int' class='fnname'>type_int</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.type_float' class='method'><span id='type_float.v' class='invisible'><code>fn <a href='#method.type_float' class='fnname'>type_float</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.type_string' class='method'><span id='type_string.v' class='invisible'><code>fn <a href='#method.type_string' class='fnname'>type_string</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.variable' class='method'><span id='variable.v' class='invisible'><code>fn <a href='#method.variable' class='fnname'>variable</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.declaration' class='method'><span id='declaration.v' class='invisible'><code>fn <a href='#method.declaration' class='fnname'>declaration</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.wrap_decl' class='method'><span id='wrap_decl.v' class='invisible'><code>fn <a href='#method.wrap_decl' class='fnname'>wrap_decl</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.decl_list' class='method'><span id='decl_list.v' class='invisible'><code>fn <a href='#method.decl_list' class='fnname'>decl_list</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.literal' class='method'><span id='literal.v' class='invisible'><code>fn <a href='#method.literal' class='fnname'>literal</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.rel_op' class='method'><span id='rel_op.v' class='invisible'><code>fn <a href='#method.rel_op' class='fnname'>rel_op</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.rel_op_eq' class='method'><span id='rel_op_eq.v' class='invisible'><code>fn <a href='#method.rel_op_eq' class='fnname'>rel_op_eq</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.rel_op_le' class='method'><span id='rel_op_le.v' class='invisible'><code>fn <a href='#method.rel_op_le' class='fnname'>rel_op_le</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.rel_op_lt' class='method'><span id='rel_op_lt.v' class='invisible'><code>fn <a href='#method.rel_op_lt' class='fnname'>rel_op_lt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.add_op' class='method'><span id='add_op.v' class='invisible'><code>fn <a href='#method.add_op' class='fnname'>add_op</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.add_op_add' class='method'><span id='add_op_add.v' class='invisible'><code>fn <a href='#method.add_op_add' class='fnname'>add_op_add</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.add_op_sub' class='method'><span id='add_op_sub.v' class='invisible'><code>fn <a href='#method.add_op_sub' class='fnname'>add_op_sub</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.mul_op' class='method'><span id='mul_op.v' class='invisible'><code>fn <a href='#method.mul_op' class='fnname'>mul_op</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.mul_op_mul' class='method'><span id='mul_op_mul.v' class='invisible'><code>fn <a href='#method.mul_op_mul' class='fnname'>mul_op_mul</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.mul_op_div' class='method'><span id='mul_op_div.v' class='invisible'><code>fn <a href='#method.mul_op_div' class='fnname'>mul_op_div</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.un_op' class='method'><span id='un_op.v' class='invisible'><code>fn <a href='#method.un_op' class='fnname'>un_op</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.un_op_minus' class='method'><span id='un_op_minus.v' class='invisible'><code>fn <a href='#method.un_op_minus' class='fnname'>un_op_minus</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.un_op_not' class='method'><span id='un_op_not.v' class='invisible'><code>fn <a href='#method.un_op_not' class='fnname'>un_op_not</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.expression' class='method'><span id='expression.v' class='invisible'><code>fn <a href='#method.expression' class='fnname'>expression</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.simple_expression' class='method'><span id='simple_expression.v' class='invisible'><code>fn <a href='#method.simple_expression' class='fnname'>simple_expression</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.term' class='method'><span id='term.v' class='invisible'><code>fn <a href='#method.term' class='fnname'>term</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.factor' class='method'><span id='factor.v' class='invisible'><code>fn <a href='#method.factor' class='fnname'>factor</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.literal_expr' class='method'><span id='literal_expr.v' class='invisible'><code>fn <a href='#method.literal_expr' class='fnname'>literal_expr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.call_expr' class='method'><span id='call_expr.v' class='invisible'><code>fn <a href='#method.call_expr' class='fnname'>call_expr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.expr_list' class='method'><span id='expr_list.v' class='invisible'><code>fn <a href='#method.expr_list' class='fnname'>expr_list</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.wrap_expr' class='method'><span id='wrap_expr.v' class='invisible'><code>fn <a href='#method.wrap_expr' class='fnname'>wrap_expr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.variable_expr' class='method'><span id='variable_expr.v' class='invisible'><code>fn <a href='#method.variable_expr' class='fnname'>variable_expr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.parenth_expr' class='method'><span id='parenth_expr.v' class='invisible'><code>fn <a href='#method.parenth_expr' class='fnname'>parenth_expr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.lparenth' class='method'><span id='lparenth.v' class='invisible'><code>fn <a href='#method.lparenth' class='fnname'>lparenth</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.rparenth' class='method'><span id='rparenth.v' class='invisible'><code>fn <a href='#method.rparenth' class='fnname'>rparenth</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.statement' class='method'><span id='statement.v' class='invisible'><code>fn <a href='#method.statement' class='fnname'>statement</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.expr_stmt' class='method'><span id='expr_stmt.v' class='invisible'><code>fn <a href='#method.expr_stmt' class='fnname'>expr_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.decl_stmt' class='method'><span id='decl_stmt.v' class='invisible'><code>fn <a href='#method.decl_stmt' class='fnname'>decl_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.assignment' class='method'><span id='assignment.v' class='invisible'><code>fn <a href='#method.assignment' class='fnname'>assignment</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.if_stmt' class='method'><span id='if_stmt.v' class='invisible'><code>fn <a href='#method.if_stmt' class='fnname'>if_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.else_part' class='method'><span id='else_part.v' class='invisible'><code>fn <a href='#method.else_part' class='fnname'>else_part</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.while_stmt' class='method'><span id='while_stmt.v' class='invisible'><code>fn <a href='#method.while_stmt' class='fnname'>while_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.return_stmt' class='method'><span id='return_stmt.v' class='invisible'><code>fn <a href='#method.return_stmt' class='fnname'>return_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.compound_stmt' class='method'><span id='compound_stmt.v' class='invisible'><code>fn <a href='#method.compound_stmt' class='fnname'>compound_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.lbrace' class='method'><span id='lbrace.v' class='invisible'><code>fn <a href='#method.lbrace' class='fnname'>lbrace</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.rbrace' class='method'><span id='rbrace.v' class='invisible'><code>fn <a href='#method.rbrace' class='fnname'>rbrace</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.wrap_stmt' class='method'><span id='wrap_stmt.v' class='invisible'><code>fn <a href='#method.wrap_stmt' class='fnname'>wrap_stmt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.program' class='method'><span id='program.v' class='invisible'><code>fn <a href='#method.program' class='fnname'>program</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.function' class='method'><span id='function.v' class='invisible'><code>fn <a href='#method.function' class='fnname'>function</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.wrap_fun' class='method'><span id='wrap_fun.v' class='invisible'><code>fn <a href='#method.wrap_fun' class='fnname'>wrap_fun</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.whitespace' class='method'><span id='whitespace.v' class='invisible'><code>fn <a href='#method.whitespace' class='fnname'>whitespace</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.try' class='method'><span id='try.v' class='invisible'><code>fn <a href='#method.try' class='fnname'>try</a>&lt;F&gt;(&amp;mut self, revert: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>, rule: F) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;mut Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code></span></h4>
+<h4 id='method.prec_climb' class='method'><span id='prec_climb.v' class='invisible'><code>fn <a href='#method.prec_climb' class='fnname'>prec_climb</a>&lt;F, G&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; left: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; min_prec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last_op: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; primary: &amp;mut F,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; climb: &amp;mut G)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;, <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a> <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>, G: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</span></code></span></h4>
+<h4 id='method.parse_variable' class='method'><span id='parse_variable.v' class='invisible'><code>fn <a href='#method.parse_variable' class='fnname'>parse_variable</a>(&amp;self) -&gt; <a class='struct' href='../../../cleaver/fe/ast/struct.Variable.html' title='cleaver::fe::ast::Variable'>Variable</a></code></span></h4>
+<h4 id='method.parse_type' class='method'><span id='parse_type.v' class='invisible'><code>fn <a href='#method.parse_type' class='fnname'>parse_type</a>(&amp;self) -&gt; <a class='enum' href='../../../cleaver/fe/ast/enum.Type.html' title='cleaver::fe::ast::Type'>Type</a></code></span></h4>
+<h4 id='method.parse_binary_op' class='method'><span id='parse_binary_op.v' class='invisible'><code>fn <a href='#method.parse_binary_op' class='fnname'>parse_binary_op</a>(&amp;self) -&gt; <a class='enum' href='../../../cleaver/fe/ast/enum.BinaryOp.html' title='cleaver::fe::ast::BinaryOp'>BinaryOp</a></code></span></h4>
+<h4 id='method.parse_unary_op' class='method'><span id='parse_unary_op.v' class='invisible'><code>fn <a href='#method.parse_unary_op' class='fnname'>parse_unary_op</a>(&amp;self) -&gt; <a class='enum' href='../../../cleaver/fe/ast/enum.UnaryOp.html' title='cleaver::fe::ast::UnaryOp'>UnaryOp</a></code></span></h4>
+<h4 id='method.parse_literal' class='method'><span id='parse_literal.v' class='invisible'><code>fn <a href='#method.parse_literal' class='fnname'>parse_literal</a>(&amp;self) -&gt; <a class='enum' href='../../../cleaver/fe/ast/enum.Literal.html' title='cleaver::fe::ast::Literal'>Literal</a></code></span></h4>
+<h4 id='method.parse_expression' class='method'><span id='parse_expression.v' class='invisible'><code>fn <a href='#method.parse_expression' class='fnname'>parse_expression</a>(&amp;self) -&gt; <a class='struct' href='../../../cleaver/fe/ast/struct.Node.html' title='cleaver::fe::ast::Node'>Node</a>&lt;<a class='enum' href='../../../cleaver/fe/ast/enum.Expression.html' title='cleaver::fe::ast::Expression'>Expression</a>&gt;</code></span></h4>
+<h4 id='method.parse_expressions' class='method'><span id='parse_expressions.v' class='invisible'><code>fn <a href='#method.parse_expressions' class='fnname'>parse_expressions</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/linked_list/struct.LinkedList.html' title='collections::linked_list::LinkedList'>LinkedList</a>&lt;<a class='struct' href='../../../cleaver/fe/ast/struct.Node.html' title='cleaver::fe::ast::Node'>Node</a>&lt;<a class='enum' href='../../../cleaver/fe/ast/enum.Expression.html' title='cleaver::fe::ast::Expression'>Expression</a>&gt;&gt;</code></span></h4>
+<h4 id='method.parse_statement' class='method'><span id='parse_statement.v' class='invisible'><code>fn <a href='#method.parse_statement' class='fnname'>parse_statement</a>(&amp;self) -&gt; <a class='struct' href='../../../cleaver/fe/ast/struct.Node.html' title='cleaver::fe::ast::Node'>Node</a>&lt;<a class='enum' href='../../../cleaver/fe/ast/enum.Statement.html' title='cleaver::fe::ast::Statement'>Statement</a>&gt;</code></span></h4>
+<h4 id='method.parse_else_part' class='method'><span id='parse_else_part.v' class='invisible'><code>fn <a href='#method.parse_else_part' class='fnname'>parse_else_part</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='struct' href='../../../cleaver/fe/ast/struct.Node.html' title='cleaver::fe::ast::Node'>Node</a>&lt;<a class='enum' href='../../../cleaver/fe/ast/enum.Statement.html' title='cleaver::fe::ast::Statement'>Statement</a>&gt;&gt;&gt;</code></span></h4>
+<h4 id='method.parse_statements' class='method'><span id='parse_statements.v' class='invisible'><code>fn <a href='#method.parse_statements' class='fnname'>parse_statements</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/linked_list/struct.LinkedList.html' title='collections::linked_list::LinkedList'>LinkedList</a>&lt;<a class='struct' href='../../../cleaver/fe/ast/struct.Node.html' title='cleaver::fe::ast::Node'>Node</a>&lt;<a class='enum' href='../../../cleaver/fe/ast/enum.Statement.html' title='cleaver::fe::ast::Statement'>Statement</a>&gt;&gt;</code></span></h4>
+<h4 id='method.parse_function' class='method'><span id='parse_function.v' class='invisible'><code>fn <a href='#method.parse_function' class='fnname'>parse_function</a>(&amp;self) -&gt; <a class='struct' href='../../../cleaver/fe/ast/struct.Node.html' title='cleaver::fe::ast::Node'>Node</a>&lt;<a class='struct' href='../../../cleaver/fe/ast/struct.Function.html' title='cleaver::fe::ast::Function'>Function</a>&gt;</code></span></h4>
+<h4 id='method.parse_program' class='method'><span id='parse_program.v' class='invisible'><code>fn <a href='#method.parse_program' class='fnname'>parse_program</a>(&amp;self) -&gt; <a class='type' href='../../../cleaver/fe/ast/type.Functions.html' title='cleaver::fe::ast::Functions'>Functions</a></code></span></h4>
+<h4 id='method.parse_declaration' class='method'><span id='parse_declaration.v' class='invisible'><code>fn <a href='#method.parse_declaration' class='fnname'>parse_declaration</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html' title='alloc::rc::Rc'>Rc</a>&lt;<a class='struct' href='../../../cleaver/fe/ast/struct.Variable.html' title='cleaver::fe::ast::Variable'>Variable</a>&gt;</code></span></h4>
+<h4 id='method.parse_declarations' class='method'><span id='parse_declarations.v' class='invisible'><code>fn <a href='#method.parse_declarations' class='fnname'>parse_declarations</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/linked_list/struct.LinkedList.html' title='collections::linked_list::LinkedList'>LinkedList</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html' title='alloc::rc::Rc'>Rc</a>&lt;<a class='struct' href='../../../cleaver/fe/ast/struct.Variable.html' title='cleaver::fe::ast::Variable'>Variable</a>&gt;&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input, T:&nbsp;<a class='trait' href='../../../pest/input/trait.Input.html' title='pest::input::Input'>Input</a>&lt;'input&gt;&gt; <a class='trait' href='../../../pest/parser/trait.Parser.html' title='pest::parser::Parser'>Parser</a>&lt;'input, T&gt; for <a class='struct' href='../../../cleaver/fe/parser/struct.Rdp.html' title='cleaver::fe::parser::Rdp'>Rdp</a>&lt;T&gt;</code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Rule' class='type'><span id='Rule.t' class='invisible'><code>type <a href='../../../pest/parser/trait.Parser.html#associatedtype.Rule' class='type'>Rule</a> = <a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a></code></span></h4>
+<h4 id='associatedtype.Token' class='type'><span id='Token.t' class='invisible'><code>type <a href='../../../pest/parser/trait.Parser.html#associatedtype.Token' class='type'>Token</a> = <a class='struct' href='../../../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;</code></span></h4>
+<h4 id='method.input' class='method'><span id='input.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.input' class='fnname'>input</a>(&amp;self) -&gt; &amp;T</code></span></h4>
+<h4 id='method.input_mut' class='method'><span id='input_mut.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.input_mut' class='fnname'>input_mut</a>(&amp;mut self) -&gt; &amp;mut T</code></span></h4>
+<h4 id='method.end' class='method'><span id='end.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.end' class='fnname'>end</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether a <code>Parser</code> has reached its end.</p>
+</div><h4 id='method.eoi_matched' class='method'><span id='eoi_matched.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.eoi_matched' class='fnname'>eoi_matched</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether a <code>Parser</code> has matched end-of-input.</p>
+</div><h4 id='method.reset' class='method'><span id='reset.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.reset' class='fnname'>reset</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>Reset a <code>Parser</code>.</p>
+</div><h4 id='method.queue' class='method'><span id='queue.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.queue' class='fnname'>queue</a>(&amp;self) -&gt; &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Returns the queue of all matched <code>Token</code>s.</p>
+</div><h4 id='method.queue_index' class='method'><span id='queue_index.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.queue_index' class='fnname'>queue_index</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Returns the current index within the queue. Used in <code>process!</code>.</p>
+</div><h4 id='method.inc_queue_index' class='method'><span id='inc_queue_index.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.inc_queue_index' class='fnname'>inc_queue_index</a>(&amp;self)</code></span></h4>
+<div class='docblock'><p>Increments the current index within the queue. Used in <code>process!</code>.</p>
+</div><h4 id='method.set_queue_index' class='method'><span id='set_queue_index.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.set_queue_index' class='fnname'>set_queue_index</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>Set the current index within the queue. Used in <code>process!</code>.</p>
+</div><h4 id='method.queue_mut' class='method'><span id='queue_mut.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.queue_mut' class='fnname'>queue_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Returns the mutable queue of all matched <code>Token</code>s.</p>
+</div><h4 id='method.skip_ws' class='method'><span id='skip_ws.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.skip_ws' class='fnname'>skip_ws</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>Skips white-space.</p>
+</div><h4 id='method.skip_com' class='method'><span id='skip_com.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.skip_com' class='fnname'>skip_com</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>Skips comments.</p>
+</div><h4 id='method.is_atomic' class='method'><span id='is_atomic.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.is_atomic' class='fnname'>is_atomic</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether a <code>Parser</code> is currently inside an atomic rule.</p>
+</div><h4 id='method.set_atomic' class='method'><span id='set_atomic.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.set_atomic' class='fnname'>set_atomic</a>(&amp;mut self, value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>Sets a <code>Parser</code> to atomic rule mode, barring comment &amp; white-space skipping.</p>
+</div><h4 id='method.track' class='method'><span id='track.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.track' class='fnname'>track</a>(&amp;mut self, failed: <a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>, pos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>Keeps track of rule failures. It gets called when a <code>Rule</code> fails at <code>pos</code>.</p>
+</div><h4 id='method.tracked_len' class='method'><span id='tracked_len.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.tracked_len' class='fnname'>tracked_len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Returns the length of the tracked <code>Rule</code>s.</p>
+</div><h4 id='method.expected' class='method'><span id='expected.v' class='invisible'><code>fn <a href='../../../pest/parser/trait.Parser.html#tymethod.expected' class='fnname'>expected</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='enum' href='../../../cleaver/fe/parser/enum.Rule.html' title='cleaver::fe::parser::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></span></h4>
+<div class='docblock'><p>Retuns a <code>Vec</code> of all expected <code>Rule</code>s at the deepest position where the parsing last stopped. It only returns leafs from the rule tree. Used for error reporting. <a href="../../../pest/parser/trait.Parser.html#tymethod.expected">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "cleaver";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>
